@@ -7,6 +7,7 @@
 Name | Type
 ------------ | -------------
 `deposits` | [Array&lt;CryptoDeposit&gt;](CryptoDeposit.md)
+`minDepositCents` | number
 
 ## Example
 
@@ -16,6 +17,7 @@ import type { ListDeposits200Response } from '@gpuai/sdk'
 // TODO: Update the object below with actual values
 const example = {
   "deposits": null,
+  "minDepositCents": 500,
 } satisfies ListDeposits200Response
 
 console.log(example)

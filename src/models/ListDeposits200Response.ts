@@ -33,6 +33,12 @@ export interface ListDeposits200Response {
      * @memberof ListDeposits200Response
      */
     deposits: Array<CryptoDeposit>;
+    /**
+     * The effective minimum deposit in USD cents (admin override, else the deployment's configured floor). Validate amounts against this live value rather than hardcoding the default.
+     * @type {number}
+     * @memberof ListDeposits200Response
+     */
+    minDepositCents: number;
 }
 
 /**
@@ -40,6 +46,7 @@ export interface ListDeposits200Response {
  */
 export function instanceOfListDeposits200Response(value: object): value is ListDeposits200Response {
     if (!('deposits' in value) || value['deposits'] === undefined) return false;
+    if ((!('minDepositCents' in (value as Record<string, any>)) && !('min_deposit_cents' in (value as Record<string, any>))) || ((value as Record<string, any>)['minDepositCents'] === undefined && (value as Record<string, any>)['min_deposit_cents'] === undefined)) return false;
     return true;
 }
 
@@ -54,6 +61,7 @@ export function ListDeposits200ResponseFromJSONTyped(json: any, ignoreDiscrimina
     return {
         
         'deposits': ((json['deposits'] as Array<any>).map(CryptoDepositFromJSON)),
+        'minDepositCents': json['min_deposit_cents'],
     };
 }
 
@@ -69,6 +77,7 @@ export function ListDeposits200ResponseToJSONTyped(value?: ListDeposits200Respon
     return {
         
         'deposits': ((value['deposits'] as Array<any>).map(CryptoDepositToJSON)),
+        'min_deposit_cents': value['minDepositCents'],
     };
 }
 
