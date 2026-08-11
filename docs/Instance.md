@@ -20,6 +20,7 @@ Name | Type
 `createdAt` | Date
 `readyAt` | Date
 `terminatedAt` | Date
+`lastReachableAt` | Date
 
 ## Example
 
@@ -42,6 +43,7 @@ const example = {
   "createdAt": null,
   "readyAt": null,
   "terminatedAt": null,
+  "lastReachableAt": null,
 } satisfies Instance
 
 console.log(example)

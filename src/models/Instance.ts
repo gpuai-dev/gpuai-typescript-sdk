@@ -111,6 +111,12 @@ export interface Instance {
      * @memberof Instance
      */
     terminatedAt?: Date;
+    /**
+     * Last time the platform verified the SSH path to this instance end-to-end through the tunnel. Absent means the instance has not been probed yet (freshly launched, or no tunnel) — it does NOT mean unreachable. An instance whose status is still "running" while this timestamp stops advancing is one whose SSH has died even though the machine is up.
+     * @type {Date}
+     * @memberof Instance
+     */
+    lastReachableAt?: Date;
 }
 
 
@@ -177,6 +183,7 @@ export function InstanceFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'createdAt': (new Date(json['created_at'])),
         'readyAt': json['ready_at'] == null ? undefined : (new Date(json['ready_at'])),
         'terminatedAt': json['terminated_at'] == null ? undefined : (new Date(json['terminated_at'])),
+        'lastReachableAt': json['last_reachable_at'] == null ? undefined : (new Date(json['last_reachable_at'])),
     };
 }
 
@@ -205,6 +212,7 @@ export function InstanceToJSONTyped(value?: Instance | null, ignoreDiscriminator
         'created_at': value['createdAt'].toISOString(),
         'ready_at': value['readyAt'] == null ? value['readyAt'] : value['readyAt'].toISOString(),
         'terminated_at': value['terminatedAt'] == null ? value['terminatedAt'] : value['terminatedAt'].toISOString(),
+        'last_reachable_at': value['lastReachableAt'] == null ? value['lastReachableAt'] : value['lastReachableAt'].toISOString(),
     };
 }
 
