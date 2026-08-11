@@ -13,7 +13,6 @@ docs/CommunityMachine.md
 docs/CommunityMachineDelistResult.md
 docs/CommunityMachineRegistration.md
 docs/CommunitySupplier.md
-docs/CreateCryptoDepositRequest.md
 docs/CreateFineTuningJobRequest.md
 docs/CreateFineTuningJobRequestGpuai.md
 docs/CreateFineTuningJobRequestMethod.md
@@ -21,7 +20,6 @@ docs/CreateFineTuningJobRequestMethodLora.md
 docs/CreateInstanceRequest.md
 docs/CreateSshKeyRequest.md
 docs/CreateWebhookEndpointRequest.md
-docs/CryptoDeposit.md
 docs/Environments.md
 docs/EnvironmentsApi.md
 docs/FileObject.md
@@ -48,7 +46,6 @@ docs/InstanceConnection.md
 docs/InstancePage.md
 docs/InstancesApi.md
 docs/ListCommunityMachines200Response.md
-docs/ListDeposits200Response.md
 docs/MetaApi.md
 docs/Model.md
 docs/ModelList.md
@@ -117,7 +114,6 @@ src/models/CommunityMachine.ts
 src/models/CommunityMachineDelistResult.ts
 src/models/CommunityMachineRegistration.ts
 src/models/CommunitySupplier.ts
-src/models/CreateCryptoDepositRequest.ts
 src/models/CreateFineTuningJobRequest.ts
 src/models/CreateFineTuningJobRequestGpuai.ts
 src/models/CreateFineTuningJobRequestMethod.ts
@@ -125,7 +121,6 @@ src/models/CreateFineTuningJobRequestMethodLora.ts
 src/models/CreateInstanceRequest.ts
 src/models/CreateSshKeyRequest.ts
 src/models/CreateWebhookEndpointRequest.ts
-src/models/CryptoDeposit.ts
 src/models/Environments.ts
 src/models/FileObject.ts
 src/models/FineTuningJob.ts
@@ -147,7 +142,6 @@ src/models/Instance.ts
 src/models/InstanceConnection.ts
 src/models/InstancePage.ts
 src/models/ListCommunityMachines200Response.ts
-src/models/ListDeposits200Response.ts
 src/models/Model.ts
 src/models/ModelList.ts
 src/models/ModelParametersInner.ts
