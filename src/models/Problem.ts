@@ -71,6 +71,7 @@ export const ProblemCodeEnum = {
     ValidationFailed: 'validation_failed',
     InvalidGpuType: 'invalid_gpu_type',
     DiskUnavailable: 'disk_unavailable',
+    DiskExceedsOffering: 'disk_exceeds_offering',
     ModelTooLarge: 'model_too_large',
     InsufficientBalance: 'insufficient_balance',
     QuotaExceeded: 'quota_exceeded',

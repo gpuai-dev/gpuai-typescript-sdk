@@ -80,7 +80,7 @@ export interface CreateInstanceRequest {
      */
     offeringId?: string;
     /**
-     * Requested instance filesystem size in GB. Omit for the platform default (100 GB), which never narrows placement. Setting it is a hard requirement: placement narrows to capacity that can honor it (see `disk_configurable` on GET /v1/pricing), and a request no offering of the gpu_type can honor returns 422 `disk_unavailable` rather than launching with a different size. Disk beyond the included allowance (100 GB) is billed at the offering's `disk_price_per_gb_hour` (GET /v1/pricing), folded into the instance's single hourly rate. Bounds: at least 10, at most the platform ceiling (currently 1000) — outside them returns 422 `validation_failed`.
+     * Requested instance filesystem size in GB. Omit for the platform default (100 GB), which never narrows placement. Setting it is a hard requirement: placement narrows to capacity that can honor it (see `disk_configurable` on GET /v1/pricing), and a request no offering of the gpu_type can honor returns 422 `disk_unavailable` rather than launching with a different size. When the launch also pins an exact `offering_id`, a disk_gb larger than that offering's displayed `storage_gb` returns 422 `disk_exceeds_offering` rather than launching with a clamped filesystem. Disk beyond the included allowance (100 GB) is billed at the offering's `disk_price_per_gb_hour` (GET /v1/pricing), folded into the instance's single hourly rate. Bounds: at least 10, at most the platform ceiling (currently 1000) — outside them returns 422 `validation_failed`.
      * @type {number}
      * @memberof CreateInstanceRequest
      */
