@@ -14,11 +14,6 @@
 
 import * as runtime from '../runtime';
 import {
-    type CommunityEarnings,
-    CommunityEarningsFromJSON,
-    CommunityEarningsToJSON,
-} from '../models/CommunityEarnings';
-import {
     type CommunityMachineDelistResult,
     CommunityMachineDelistResultFromJSON,
     CommunityMachineDelistResultToJSON,
@@ -48,16 +43,6 @@ import {
     RegisterCommunityMachineRequestFromJSON,
     RegisterCommunityMachineRequestToJSON,
 } from '../models/RegisterCommunityMachineRequest';
-import {
-    type SupplierMachineView,
-    SupplierMachineViewFromJSON,
-    SupplierMachineViewToJSON,
-} from '../models/SupplierMachineView';
-import {
-    type UpdateCommunityMachineRequest,
-    UpdateCommunityMachineRequestFromJSON,
-    UpdateCommunityMachineRequestToJSON,
-} from '../models/UpdateCommunityMachineRequest';
 
 export interface DelistCommunityMachineRequest {
     id: string;
@@ -67,14 +52,6 @@ export interface EnableCommunitySupplierRequest {
     idempotencyKey?: string;
 }
 
-export interface GetCommunityEarningsRequest {
-    limit?: number;
-}
-
-export interface GetCommunityMachineRequest {
-    id: string;
-}
-
 export interface ReclaimCommunityMachineRequest {
     id: string;
 }
@@ -82,11 +59,6 @@ export interface ReclaimCommunityMachineRequest {
 export interface RegisterCommunityMachineOperationRequest {
     idempotencyKey?: string;
     registerCommunityMachineRequest?: RegisterCommunityMachineRequest;
-}
-
-export interface UpdateCommunityMachineOperationRequest {
-    id: string;
-    updateCommunityMachineRequest: UpdateCommunityMachineRequest;
 }
 
 /**
@@ -197,112 +169,6 @@ export class CommunityApi extends runtime.BaseAPI {
      */
     async enableCommunitySupplier(requestParameters: EnableCommunitySupplierRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CommunitySupplier> {
         const response = await this.enableCommunitySupplierRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Creates request options for getCommunityEarnings without sending the request
-     */
-    async getCommunityEarningsRequestOpts(requestParameters: GetCommunityEarningsRequest): Promise<runtime.RequestOpts> {
-        const queryParameters: any = {};
-
-        if (requestParameters['limit'] != null) {
-            queryParameters['limit'] = requestParameters['limit'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/community/earnings`;
-
-        return {
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Returns the caller org\'s supplier earnings — lifetime accrued and unpaid totals in cents plus recent ledger entries, newest first. An optional `limit` caps the ledger rows (server-clamped). Requires the `community` scope (read).
-     * Get your Community Cloud earnings
-     */
-    async getCommunityEarningsRaw(requestParameters: GetCommunityEarningsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CommunityEarnings>> {
-        const requestOptions = await this.getCommunityEarningsRequestOpts(requestParameters);
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => CommunityEarningsFromJSON(jsonValue));
-    }
-
-    /**
-     * Returns the caller org\'s supplier earnings — lifetime accrued and unpaid totals in cents plus recent ledger entries, newest first. An optional `limit` caps the ledger rows (server-clamped). Requires the `community` scope (read).
-     * Get your Community Cloud earnings
-     */
-    async getCommunityEarnings(requestParameters: GetCommunityEarningsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CommunityEarnings> {
-        const response = await this.getCommunityEarningsRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Creates request options for getCommunityMachine without sending the request
-     */
-    async getCommunityMachineRequestOpts(requestParameters: GetCommunityMachineRequest): Promise<runtime.RequestOpts> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling getCommunityMachine().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/community/machines/{id}`;
-        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
-
-        return {
-            path: urlPath,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        };
-    }
-
-    /**
-     * Returns one machine the caller\'s org owns, as a supplier-facing view (`occupied`/`online` projections — the renting customer\'s instance id is never exposed). A missing or cross-org machine returns 404 with an indistinguishable body. Requires the `community` scope (read).
-     * Get one of your Community Cloud machines
-     */
-    async getCommunityMachineRaw(requestParameters: GetCommunityMachineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupplierMachineView>> {
-        const requestOptions = await this.getCommunityMachineRequestOpts(requestParameters);
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => SupplierMachineViewFromJSON(jsonValue));
-    }
-
-    /**
-     * Returns one machine the caller\'s org owns, as a supplier-facing view (`occupied`/`online` projections — the renting customer\'s instance id is never exposed). A missing or cross-org machine returns 404 with an indistinguishable body. Requires the `community` scope (read).
-     * Get one of your Community Cloud machines
-     */
-    async getCommunityMachine(requestParameters: GetCommunityMachineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupplierMachineView> {
-        const response = await this.getCommunityMachineRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -506,71 +372,6 @@ export class CommunityApi extends runtime.BaseAPI {
      */
     async registerCommunityMachine(requestParameters: RegisterCommunityMachineOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CommunityMachineRegistration> {
         const response = await this.registerCommunityMachineRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Creates request options for updateCommunityMachine without sending the request
-     */
-    async updateCommunityMachineRequestOpts(requestParameters: UpdateCommunityMachineOperationRequest): Promise<runtime.RequestOpts> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling updateCommunityMachine().'
-            );
-        }
-
-        if (requestParameters['updateCommunityMachineRequest'] == null) {
-            throw new runtime.RequiredError(
-                'updateCommunityMachineRequest',
-                'Required parameter "updateCommunityMachineRequest" was null or undefined when calling updateCommunityMachine().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        let urlPath = `/community/machines/{id}`;
-        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
-
-        return {
-            path: urlPath,
-            method: 'PATCH',
-            headers: headerParameters,
-            query: queryParameters,
-            body: UpdateCommunityMachineRequestToJSON(requestParameters['updateCommunityMachineRequest']),
-        };
-    }
-
-    /**
-     * Sets the machine\'s hourly price. `price_per_hour` is the WHOLE-MACHINE rate (never per-GPU). Prices below the platform floor are rejected with a `price-below-floor` problem carrying the concrete `floor_per_hour` extension member. A price change never affects an in-flight rental (its rate was snapshotted at provision); the catalog reprices on the next poll. Requires the `community` scope (or `full_access`).
-     * Update a Community Cloud machine\'s price
-     */
-    async updateCommunityMachineRaw(requestParameters: UpdateCommunityMachineOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupplierMachineView>> {
-        const requestOptions = await this.updateCommunityMachineRequestOpts(requestParameters);
-        const response = await this.request(requestOptions, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => SupplierMachineViewFromJSON(jsonValue));
-    }
-
-    /**
-     * Sets the machine\'s hourly price. `price_per_hour` is the WHOLE-MACHINE rate (never per-GPU). Prices below the platform floor are rejected with a `price-below-floor` problem carrying the concrete `floor_per_hour` extension member. A price change never affects an in-flight rental (its rate was snapshotted at provision); the catalog reprices on the next poll. Requires the `community` scope (or `full_access`).
-     * Update a Community Cloud machine\'s price
-     */
-    async updateCommunityMachine(requestParameters: UpdateCommunityMachineOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupplierMachineView> {
-        const response = await this.updateCommunityMachineRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

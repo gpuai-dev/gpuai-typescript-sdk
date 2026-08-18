@@ -1,4 +1,4 @@
-# @gpuai/sdk@0.2.5
+# @gpuai/sdk@0.3.0
 
 A TypeScript SDK client for the api.gpu.ai API.
 
@@ -18,7 +18,7 @@ import {
   Configuration,
   BillingApi,
 } from '@gpuai/sdk';
-import type { GetSpendingLimitRequest } from '@gpuai/sdk';
+import type { CreateCryptoDepositOperationRequest } from '@gpuai/sdk';
 
 async function example() {
   console.log("🚀 Testing @gpuai/sdk SDK...");
@@ -28,8 +28,13 @@ async function example() {
   });
   const api = new BillingApi(config);
 
+  const body = {
+    // CreateCryptoDepositRequest
+    createCryptoDepositRequest: ...,
+  } satisfies CreateCryptoDepositOperationRequest;
+
   try {
-    const data = await api.getSpendingLimit();
+    const data = await api.createCryptoDeposit(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -49,17 +54,17 @@ All URIs are relative to *https://api.gpu.ai/v1*
 
 | Class | Method | HTTP request | Description
 | ----- | ------ | ------------ | -------------
+*BillingApi* | [**createCryptoDeposit**](docs/BillingApi.md#createcryptodepositoperation) | **POST** /billing/deposits/crypto | Create a stablecoin deposit
+*BillingApi* | [**getDeposit**](docs/BillingApi.md#getdeposit) | **GET** /billing/deposits/{id} | Get one stablecoin deposit
 *BillingApi* | [**getSpendingLimit**](docs/BillingApi.md#getspendinglimit) | **GET** /billing/spending-limit | Get the org spending limit
+*BillingApi* | [**listDeposits**](docs/BillingApi.md#listdeposits) | **GET** /billing/deposits | List stablecoin deposits
 *BillingApi* | [**updateSpendingLimit**](docs/BillingApi.md#updatespendinglimitoperation) | **PUT** /billing/spending-limit | Set the org spending limit
 *CommunityApi* | [**delistCommunityMachine**](docs/CommunityApi.md#delistcommunitymachine) | **POST** /community/machines/{id}/delist | Delist a Community Cloud machine
 *CommunityApi* | [**enableCommunitySupplier**](docs/CommunityApi.md#enablecommunitysupplier) | **POST** /community/suppliers | Enable the Community Cloud supplier role
-*CommunityApi* | [**getCommunityEarnings**](docs/CommunityApi.md#getcommunityearnings) | **GET** /community/earnings | Get your Community Cloud earnings
-*CommunityApi* | [**getCommunityMachine**](docs/CommunityApi.md#getcommunitymachine) | **GET** /community/machines/{id} | Get one of your Community Cloud machines
 *CommunityApi* | [**getCommunitySupplierMe**](docs/CommunityApi.md#getcommunitysupplierme) | **GET** /community/suppliers/me | Get the caller\&#39;s Community Cloud supplier
 *CommunityApi* | [**listCommunityMachines**](docs/CommunityApi.md#listcommunitymachines) | **GET** /community/machines | List your Community Cloud machines
 *CommunityApi* | [**reclaimCommunityMachine**](docs/CommunityApi.md#reclaimcommunitymachine) | **POST** /community/machines/{id}/reclaim | Reclaim a spot-tier Community Cloud machine
 *CommunityApi* | [**registerCommunityMachine**](docs/CommunityApi.md#registercommunitymachineoperation) | **POST** /community/machines | Register a Community Cloud machine
-*CommunityApi* | [**updateCommunityMachine**](docs/CommunityApi.md#updatecommunitymachineoperation) | **PATCH** /community/machines/{id} | Update a Community Cloud machine\&#39;s price
 *EnvironmentsApi* | [**getEnvironments**](docs/EnvironmentsApi.md#getenvironments) | **GET** /environments | List launch environments (no auth required)
 *FineTuningApi* | [**cancelFineTuningJob**](docs/FineTuningApi.md#cancelfinetuningjob) | **POST** /fine_tuning/jobs/{id}/cancel | Cancel a fine-tuning job (OpenAI-compatible)
 *FineTuningApi* | [**createFile**](docs/FineTuningApi.md#createfile) | **POST** /files | Upload a fine-tuning dataset file (OpenAI-compatible)
@@ -105,12 +110,11 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [ChatCompletionRequest](docs/ChatCompletionRequest.md)
 - [ChatCompletionResponse](docs/ChatCompletionResponse.md)
 - [ChatMessage](docs/ChatMessage.md)
-- [CommunityEarnings](docs/CommunityEarnings.md)
-- [CommunityEarningsEntry](docs/CommunityEarningsEntry.md)
 - [CommunityMachine](docs/CommunityMachine.md)
 - [CommunityMachineDelistResult](docs/CommunityMachineDelistResult.md)
 - [CommunityMachineRegistration](docs/CommunityMachineRegistration.md)
 - [CommunitySupplier](docs/CommunitySupplier.md)
+- [CreateCryptoDepositRequest](docs/CreateCryptoDepositRequest.md)
 - [CreateFineTuningJobRequest](docs/CreateFineTuningJobRequest.md)
 - [CreateFineTuningJobRequestGpuai](docs/CreateFineTuningJobRequestGpuai.md)
 - [CreateFineTuningJobRequestMethod](docs/CreateFineTuningJobRequestMethod.md)
@@ -118,6 +122,7 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [CreateInstanceRequest](docs/CreateInstanceRequest.md)
 - [CreateSshKeyRequest](docs/CreateSshKeyRequest.md)
 - [CreateWebhookEndpointRequest](docs/CreateWebhookEndpointRequest.md)
+- [CryptoDeposit](docs/CryptoDeposit.md)
 - [Environments](docs/Environments.md)
 - [FileObject](docs/FileObject.md)
 - [FineTuningJob](docs/FineTuningJob.md)
@@ -139,6 +144,7 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [InstanceConnection](docs/InstanceConnection.md)
 - [InstancePage](docs/InstancePage.md)
 - [ListCommunityMachines200Response](docs/ListCommunityMachines200Response.md)
+- [ListDeposits200Response](docs/ListDeposits200Response.md)
 - [Model](docs/Model.md)
 - [ModelList](docs/ModelList.md)
 - [ModelParametersInner](docs/ModelParametersInner.md)
@@ -161,7 +167,6 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [TemplateEnvInner](docs/TemplateEnvInner.md)
 - [TemplateList](docs/TemplateList.md)
 - [TemplatePortsInner](docs/TemplatePortsInner.md)
-- [UpdateCommunityMachineRequest](docs/UpdateCommunityMachineRequest.md)
 - [UpdateInstanceRequest](docs/UpdateInstanceRequest.md)
 - [UpdateSpendingLimitRequest](docs/UpdateSpendingLimitRequest.md)
 - [Usage](docs/Usage.md)
@@ -191,7 +196,7 @@ and is automatically generated by the
 [OpenAPI Generator](https://openapi-generator.tech) project:
 
 - API version: `1.0.0`
-- Package version: `0.2.5`
+- Package version: `0.3.0`
 - Generator version: `7.24.0`
 - Build package: `org.openapitools.codegen.languages.TypeScriptFetchClientCodegen`
 

@@ -14,6 +14,21 @@
 
 import * as runtime from '../runtime';
 import {
+    type CreateCryptoDepositRequest,
+    CreateCryptoDepositRequestFromJSON,
+    CreateCryptoDepositRequestToJSON,
+} from '../models/CreateCryptoDepositRequest';
+import {
+    type CryptoDeposit,
+    CryptoDepositFromJSON,
+    CryptoDepositToJSON,
+} from '../models/CryptoDeposit';
+import {
+    type ListDeposits200Response,
+    ListDeposits200ResponseFromJSON,
+    ListDeposits200ResponseToJSON,
+} from '../models/ListDeposits200Response';
+import {
     type Problem,
     ProblemFromJSON,
     ProblemToJSON,
@@ -29,6 +44,14 @@ import {
     UpdateSpendingLimitRequestToJSON,
 } from '../models/UpdateSpendingLimitRequest';
 
+export interface CreateCryptoDepositOperationRequest {
+    createCryptoDepositRequest: CreateCryptoDepositRequest;
+}
+
+export interface GetDepositRequest {
+    id: string;
+}
+
 export interface UpdateSpendingLimitOperationRequest {
     updateSpendingLimitRequest: UpdateSpendingLimitRequest;
 }
@@ -37,6 +60,118 @@ export interface UpdateSpendingLimitOperationRequest {
  * 
  */
 export class BillingApi extends runtime.BaseAPI {
+
+    /**
+     * Creates request options for createCryptoDeposit without sending the request
+     */
+    async createCryptoDepositRequestOpts(requestParameters: CreateCryptoDepositOperationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['createCryptoDepositRequest'] == null) {
+            throw new runtime.RequiredError(
+                'createCryptoDepositRequest',
+                'Required parameter "createCryptoDepositRequest" was null or undefined when calling createCryptoDeposit().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/billing/deposits/crypto`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CreateCryptoDepositRequestToJSON(requestParameters['createCryptoDepositRequest']),
+        };
+    }
+
+    /**
+     * Creates a deposit intent and returns the payment address and the exact token amount to send. Requires the `billing:write` scope; any member of the organization may add funds. Send the exact `pay_amount` of `asset` on `chain` and no other network — funds sent on a different network are not detected automatically. Returns 404 when stablecoin deposits are not enabled for this deployment. 
+     * Create a stablecoin deposit
+     */
+    async createCryptoDepositRaw(requestParameters: CreateCryptoDepositOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CryptoDeposit>> {
+        const requestOptions = await this.createCryptoDepositRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CryptoDepositFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates a deposit intent and returns the payment address and the exact token amount to send. Requires the `billing:write` scope; any member of the organization may add funds. Send the exact `pay_amount` of `asset` on `chain` and no other network — funds sent on a different network are not detected automatically. Returns 404 when stablecoin deposits are not enabled for this deployment. 
+     * Create a stablecoin deposit
+     */
+    async createCryptoDeposit(requestParameters: CreateCryptoDepositOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CryptoDeposit> {
+        const response = await this.createCryptoDepositRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getDeposit without sending the request
+     */
+    async getDepositRequestOpts(requestParameters: GetDepositRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling getDeposit().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/billing/deposits/{id}`;
+        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns a single deposit belonging to the caller\'s organization. Requires the `billing:read` scope. A deposit belonging to another organization returns the same `404 deposit-not-found` as one that does not exist — deliberately, so this endpoint cannot be used to test whether a deposit id is real. Also 404 when stablecoin deposits are not enabled for this deployment. 
+     * Get one stablecoin deposit
+     */
+    async getDepositRaw(requestParameters: GetDepositRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CryptoDeposit>> {
+        const requestOptions = await this.getDepositRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CryptoDepositFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns a single deposit belonging to the caller\'s organization. Requires the `billing:read` scope. A deposit belonging to another organization returns the same `404 deposit-not-found` as one that does not exist — deliberately, so this endpoint cannot be used to test whether a deposit id is real. Also 404 when stablecoin deposits are not enabled for this deployment. 
+     * Get one stablecoin deposit
+     */
+    async getDeposit(requestParameters: GetDepositRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CryptoDeposit> {
+        const response = await this.getDepositRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Creates request options for getSpendingLimit without sending the request
@@ -82,6 +217,53 @@ export class BillingApi extends runtime.BaseAPI {
      */
     async getSpendingLimit(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SpendingLimit> {
         const response = await this.getSpendingLimitRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listDeposits without sending the request
+     */
+    async listDepositsRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/billing/deposits`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns the organization\'s stablecoin deposits, newest first, capped at 50. Requires the `billing:read` scope. The organization is taken from the authenticated API key, never from a parameter. Returns 404 when stablecoin deposits are not enabled for this deployment. 
+     * List stablecoin deposits
+     */
+    async listDepositsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListDeposits200Response>> {
+        const requestOptions = await this.listDepositsRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ListDeposits200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns the organization\'s stablecoin deposits, newest first, capped at 50. Requires the `billing:read` scope. The organization is taken from the authenticated API key, never from a parameter. Returns 404 when stablecoin deposits are not enabled for this deployment. 
+     * List stablecoin deposits
+     */
+    async listDeposits(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListDeposits200Response> {
+        const response = await this.listDepositsRaw(initOverrides);
         return await response.value();
     }
 
