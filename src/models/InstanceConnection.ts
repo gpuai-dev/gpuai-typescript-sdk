@@ -50,7 +50,7 @@ export interface InstanceConnection {
      */
     appUser?: string;
     /**
-     * HTTP Basic Auth password for app_url and terminal_url. Same availability as app_user. Treat as a secret.
+     * HTTP Basic Auth password for app_url and terminal_url. Treat as a secret. OMITTED by default from all reads — returned only on GET /instances/{id}?include=credentials (same persistence availability as app_user); the list endpoint and operation results never include it.
      * @type {string}
      * @memberof InstanceConnection
      */

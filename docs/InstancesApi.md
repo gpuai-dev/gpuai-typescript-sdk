@@ -166,7 +166,7 @@ example().catch(console.error);
 
 ## getInstance
 
-> Instance getInstance(id)
+> Instance getInstance(id, include)
 
 Get an instance
 
@@ -190,6 +190,8 @@ async function example() {
   const body = {
     // string
     id: id_example,
+    // 'credentials' | Opt-in expansion. `credentials` restores connection.app_password on this single-instance read — the only surface that returns the web-console basic-auth password. Omitted by default so bare reads can be logged without leaking the secret. Any other value is a 400 validation_failed. The list endpoint and operation reads never return the password, with or without this parameter. (optional)
+    include: include_example,
   } satisfies GetInstanceRequest;
 
   try {
@@ -210,6 +212,7 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **id** | `string` |  | [Defaults to `undefined`] |
+| **include** | `credentials` | Opt-in expansion. &#x60;credentials&#x60; restores connection.app_password on this single-instance read — the only surface that returns the web-console basic-auth password. Omitted by default so bare reads can be logged without leaking the secret. Any other value is a 400 validation_failed. The list endpoint and operation reads never return the password, with or without this parameter. | [Optional] [Defaults to `undefined`] [Enum: credentials] |
 
 ### Return type
 

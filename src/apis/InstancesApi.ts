@@ -56,6 +56,7 @@ export interface DeleteInstanceRequest {
 
 export interface GetInstanceRequest {
     id: string;
+    include?: GetInstanceIncludeEnum;
 }
 
 export interface ListInstancesRequest {
@@ -205,6 +206,10 @@ export class InstancesApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['include'] != null) {
+            queryParameters['include'] = requestParameters['include'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -374,6 +379,13 @@ export class InstancesApi extends runtime.BaseAPI {
 
 }
 
+/**
+ * @export
+ */
+export const GetInstanceIncludeEnum = {
+    Credentials: 'credentials'
+} as const;
+export type GetInstanceIncludeEnum = typeof GetInstanceIncludeEnum[keyof typeof GetInstanceIncludeEnum];
 /**
  * @export
  */

@@ -14,7 +14,7 @@
 
 import { mapValues } from '../runtime';
 /**
- * Terminal-success payload. Carries the per-instance web-access credential — app_url for template deploys, terminal_url for instances provisioned with the browser web console, and the shared basic-auth login for both. The credential is also re-readable via connection.app_user/app_password on the org-scoped instance reads.
+ * Terminal-success payload. Carries the per-instance web-access coordinates — app_url for template deploys, terminal_url for instances provisioned with the browser web console, and the basic-auth username shared by both. The basic-auth PASSWORD is never included here — retrieve it via GET /instances/{id}?include=credentials (connection.app_password).
  * @export
  * @interface OperationResult
  */
@@ -37,12 +37,6 @@ export interface OperationResult {
      * @memberof OperationResult
      */
     appBasicAuthUser?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof OperationResult
-     */
-    appBasicAuthPass?: string;
 }
 
 /**
@@ -65,7 +59,6 @@ export function OperationResultFromJSONTyped(json: any, ignoreDiscriminator: boo
         'appUrl': json['app_url'] == null ? undefined : json['app_url'],
         'terminalUrl': json['terminal_url'] == null ? undefined : json['terminal_url'],
         'appBasicAuthUser': json['app_basic_auth_user'] == null ? undefined : json['app_basic_auth_user'],
-        'appBasicAuthPass': json['app_basic_auth_pass'] == null ? undefined : json['app_basic_auth_pass'],
     };
 }
 
@@ -83,7 +76,6 @@ export function OperationResultToJSONTyped(value?: OperationResult | null, ignor
         'app_url': value['appUrl'],
         'terminal_url': value['terminalUrl'],
         'app_basic_auth_user': value['appBasicAuthUser'],
-        'app_basic_auth_pass': value['appBasicAuthPass'],
     };
 }
 
