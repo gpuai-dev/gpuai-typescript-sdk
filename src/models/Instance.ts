@@ -40,7 +40,7 @@ export interface Instance {
      */
     name?: string;
     /**
-     * Customer-facing lifecycle status. "allocating" = the GPU is still being acquired from the provider (slow-boot capacity such as baremetal can take ~15 min); "starting" = the node exists and is booting; "running" = ready to use.
+     * Customer-facing lifecycle status. "allocating" = the GPU is still being acquired from the provider (slow-boot capacity such as baremetal can take ~15 min); "starting" = the node exists and is booting; "running" = ready to use. "unreachable" = the platform's tunnel probe has confirmed the SSH path is down while the machine may still be up: the instance is NOT usable right now, billing for the confirmed-dead window is auto-credited back, and the instance either recovers to "running" on its own or is failed after a grace window. It is a degraded reading of a running instance, not a separate lifecycle state — see unreachable_since.
      * @type {InstanceStatusEnum}
      * @memberof Instance
      */
@@ -117,6 +117,12 @@ export interface Instance {
      * @memberof Instance
      */
     lastReachableAt?: Date;
+    /**
+     * Start of the confirmed tunnel outage the instance is currently in. Present exactly when status is "unreachable", absent otherwise. It is the timestamp the auto-credit for the dead window is computed from, so a ledger credit can be reconciled against it.
+     * @type {Date}
+     * @memberof Instance
+     */
+    unreachableSince?: Date;
 }
 
 
@@ -130,6 +136,7 @@ export const InstanceStatusEnum = {
     Stopping: 'stopping',
     Stopped: 'stopped',
     Terminated: 'terminated',
+    Unreachable: 'unreachable',
     Error: 'error'
 } as const;
 export type InstanceStatusEnum = typeof InstanceStatusEnum[keyof typeof InstanceStatusEnum];
@@ -184,6 +191,7 @@ export function InstanceFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'readyAt': json['ready_at'] == null ? undefined : (new Date(json['ready_at'])),
         'terminatedAt': json['terminated_at'] == null ? undefined : (new Date(json['terminated_at'])),
         'lastReachableAt': json['last_reachable_at'] == null ? undefined : (new Date(json['last_reachable_at'])),
+        'unreachableSince': json['unreachable_since'] == null ? undefined : (new Date(json['unreachable_since'])),
     };
 }
 
@@ -213,6 +221,7 @@ export function InstanceToJSONTyped(value?: Instance | null, ignoreDiscriminator
         'ready_at': value['readyAt'] == null ? value['readyAt'] : value['readyAt'].toISOString(),
         'terminated_at': value['terminatedAt'] == null ? value['terminatedAt'] : value['terminatedAt'].toISOString(),
         'last_reachable_at': value['lastReachableAt'] == null ? value['lastReachableAt'] : value['lastReachableAt'].toISOString(),
+        'unreachable_since': value['unreachableSince'] == null ? value['unreachableSince'] : value['unreachableSince'].toISOString(),
     };
 }
 

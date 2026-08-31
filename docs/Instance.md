@@ -21,6 +21,7 @@ Name | Type
 `readyAt` | Date
 `terminatedAt` | Date
 `lastReachableAt` | Date
+`unreachableSince` | Date
 
 ## Example
 
@@ -44,6 +45,7 @@ const example = {
   "readyAt": null,
   "terminatedAt": null,
   "lastReachableAt": null,
+  "unreachableSince": null,
 } satisfies Instance
 
 console.log(example)

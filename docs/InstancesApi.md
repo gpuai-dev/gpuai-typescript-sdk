@@ -268,7 +268,7 @@ async function example() {
     cursor: cursor_example,
     // number (optional)
     limit: 56,
-    // 'allocating' | 'starting' | 'running' | 'stopping' | 'stopped' | 'terminated' | 'error' | 'all' | Filter by customer-facing status (default = all non-terminated) (optional)
+    // 'allocating' | 'starting' | 'running' | 'stopping' | 'stopped' | 'terminated' | 'error' | 'all' | Filter by customer-facing status (default = all non-terminated). There is no \"unreachable\" filter value: an unreachable instance is a running instance with a dead tunnel, so it is listed under status=running and reads \"unreachable\" in the response body. (optional)
     status: status_example,
   } satisfies ListInstancesRequest;
 
@@ -291,7 +291,7 @@ example().catch(console.error);
 |------------- | ------------- | ------------- | -------------|
 | **cursor** | `string` |  | [Optional] [Defaults to `undefined`] |
 | **limit** | `number` |  | [Optional] [Defaults to `50`] |
-| **status** | `allocating`, `starting`, `running`, `stopping`, `stopped`, `terminated`, `error`, `all` | Filter by customer-facing status (default &#x3D; all non-terminated) | [Optional] [Defaults to `undefined`] [Enum: allocating, starting, running, stopping, stopped, terminated, error, all] |
+| **status** | `allocating`, `starting`, `running`, `stopping`, `stopped`, `terminated`, `error`, `all` | Filter by customer-facing status (default &#x3D; all non-terminated). There is no \&quot;unreachable\&quot; filter value: an unreachable instance is a running instance with a dead tunnel, so it is listed under status&#x3D;running and reads \&quot;unreachable\&quot; in the response body. | [Optional] [Defaults to `undefined`] [Enum: allocating, starting, running, stopping, stopped, terminated, error, all] |
 
 ### Return type
 
