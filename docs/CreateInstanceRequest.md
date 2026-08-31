@@ -13,6 +13,7 @@ Name | Type
 `sshKeyIds` | Array&lt;string&gt;
 `name` | string
 `maxPricePerHour` | number
+`viewedPricePerHour` | number
 `templateId` | string
 `environment` | string
 `offeringId` | string
@@ -33,6 +34,7 @@ const example = {
   "sshKeyIds": null,
   "name": null,
   "maxPricePerHour": null,
+  "viewedPricePerHour": null,
   "templateId": null,
   "environment": certified:pytorch@2.13,
   "offeringId": null,

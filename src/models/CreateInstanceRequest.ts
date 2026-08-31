@@ -62,6 +62,12 @@ export interface CreateInstanceRequest {
      */
     maxPricePerHour?: number;
     /**
+     * The retail $/hr the caller displayed to the user before launch. A catalog row is a quote, not a booking, and pinning an offering fixes which machine is placed but not its rate. If the launch-time price exceeds this by more than $0.01 the launch fails with `price_changed` carrying the new price instead of proceeding at the higher price; omit to accept the launch-time price (previous behavior). Refusal only — it is never read as consent, so it can neither raise what you are charged nor widen what may be bought on your behalf. Use max_price_per_hour to bound spend.
+     * @type {number}
+     * @memberof CreateInstanceRequest
+     */
+    viewedPricePerHour?: number;
+    /**
      * Deploy a curated application template (e.g. comfyui, vllm). When set, gpu_type may be omitted — the cheapest eligible GPU is auto-selected. For templates serving a Hugging Face model via env.MODEL (vllm, sglang), the model's published weights size is checked against the GPU's VRAM at submit time: an oversized model on an explicit gpu_type returns 422 `model_too_large` (auto-select instead raises its VRAM floor to the estimate, and 422s only when no available GPU fits). Gated/private/unknown repos are never blocked — the deploy proceeds and the 202 carries a `warnings` entry.
      * @type {string}
      * @memberof CreateInstanceRequest
@@ -131,6 +137,7 @@ export function CreateInstanceRequestFromJSONTyped(json: any, ignoreDiscriminato
         'sshKeyIds': json['ssh_key_ids'] == null ? undefined : json['ssh_key_ids'],
         'name': json['name'] == null ? undefined : json['name'],
         'maxPricePerHour': json['max_price_per_hour'] == null ? undefined : json['max_price_per_hour'],
+        'viewedPricePerHour': json['viewed_price_per_hour'] == null ? undefined : json['viewed_price_per_hour'],
         'templateId': json['template_id'] == null ? undefined : json['template_id'],
         'environment': json['environment'] == null ? undefined : json['environment'],
         'offeringId': json['offering_id'] == null ? undefined : json['offering_id'],
@@ -157,6 +164,7 @@ export function CreateInstanceRequestToJSONTyped(value?: CreateInstanceRequest |
         'ssh_key_ids': value['sshKeyIds'],
         'name': value['name'],
         'max_price_per_hour': value['maxPricePerHour'],
+        'viewed_price_per_hour': value['viewedPricePerHour'],
         'template_id': value['templateId'],
         'environment': value['environment'],
         'offering_id': value['offeringId'],
