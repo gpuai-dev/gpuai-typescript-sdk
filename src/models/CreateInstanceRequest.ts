@@ -68,7 +68,7 @@ export interface CreateInstanceRequest {
      */
     viewedPricePerHour?: number;
     /**
-     * Deploy a curated application template (e.g. comfyui, vllm). When set, gpu_type may be omitted — the cheapest eligible GPU is auto-selected. For templates serving a Hugging Face model via env.MODEL (vllm, sglang), the model's published weights size is checked against the GPU's VRAM at submit time: an oversized model on an explicit gpu_type returns 422 `model_too_large` (auto-select instead raises its VRAM floor to the estimate, and 422s only when no available GPU fits). Gated/private/unknown repos are never blocked — the deploy proceeds and the 202 carries a `warnings` entry.
+     * Deploy a curated application template (e.g. comfyui, vllm). When set, gpu_type may be omitted — the cheapest eligible GPU is auto-selected. For templates serving a Hugging Face model via env.MODEL (vllm, sglang), the model's published weights size is checked against the GPU's VRAM at submit time: an oversized model on an explicit gpu_type returns 422 `model_too_large` (auto-select instead raises its VRAM floor to the estimate, and 422s only when no available GPU fits). Gated/private/unknown repos are never blocked — the deploy proceeds and the 202 carries a `warnings` entry. Separately, an explicit gpu_type whose VRAM is below the template's own `min_vram_gb` returns 422 `gpu_vram_too_small`, naming the floor, the type's VRAM and the compatible GPU types. Auto-select is unaffected — it already filters by the floor.
      * @type {string}
      * @memberof CreateInstanceRequest
      */

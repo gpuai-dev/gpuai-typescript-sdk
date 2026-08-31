@@ -73,6 +73,7 @@ export const ProblemCodeEnum = {
     DiskUnavailable: 'disk_unavailable',
     DiskExceedsOffering: 'disk_exceeds_offering',
     ModelTooLarge: 'model_too_large',
+    GpuVramTooSmall: 'gpu_vram_too_small',
     PriceChanged: 'price_changed',
     InsufficientBalance: 'insufficient_balance',
     QuotaExceeded: 'quota_exceeded',
