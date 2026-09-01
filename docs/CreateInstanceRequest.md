@@ -20,6 +20,10 @@ Name | Type
 `diskGb` | number
 `env` | { [key: string]: string; }
 `image` | string
+`registryCredentialId` | string
+`entrypoint` | Array&lt;string&gt;
+`cmd` | Array&lt;string&gt;
+`ports` | [Array&lt;CreateInstanceRequestPortsInner&gt;](CreateInstanceRequestPortsInner.md)
 
 ## Example
 
@@ -42,6 +46,10 @@ const example = {
   "diskGb": 200,
   "env": null,
   "image": ghcr.io/acme/trainer:v1,
+  "registryCredentialId": null,
+  "entrypoint": null,
+  "cmd": null,
+  "ports": null,
 } satisfies CreateInstanceRequest
 
 console.log(example)

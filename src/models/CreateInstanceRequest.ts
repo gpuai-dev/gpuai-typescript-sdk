@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { CreateInstanceRequestPortsInner } from './CreateInstanceRequestPortsInner';
+import {
+    CreateInstanceRequestPortsInnerFromJSON,
+    CreateInstanceRequestPortsInnerFromJSONTyped,
+    CreateInstanceRequestPortsInnerToJSON,
+    CreateInstanceRequestPortsInnerToJSONTyped,
+} from './CreateInstanceRequestPortsInner';
+
 /**
  * 
  * @export
@@ -103,6 +111,30 @@ export interface CreateInstanceRequest {
      * @memberof CreateInstanceRequest
      */
     image?: string;
+    /**
+     * Stored registry-credential id (POST /v1/registry-credentials) for pulling a PRIVATE `image`. The credential's registry must match the image's registry (422 otherwise); wrong logins fail the pre-flight with 422 `image_unavailable` before anything is provisioned. Requires `image`.
+     * @type {string}
+     * @memberof CreateInstanceRequest
+     */
+    registryCredentialId?: string;
+    /**
+     * Override the image's ENTRYPOINT (docker semantics — also drops the image CMD unless `cmd` is given). Omit to use the image's own. At most 32 arguments / 4KB. Requires `image`.
+     * @type {Array<string>}
+     * @memberof CreateInstanceRequest
+     */
+    entrypoint?: Array<string>;
+    /**
+     * Override the image's CMD. Omit to use the image's own (or none, when `entrypoint` is overridden). Requires `image`.
+     * @type {Array<string>}
+     * @memberof CreateInstanceRequest
+     */
+    cmd?: Array<string>;
+    /**
+     * Container ports to expose on a custom-image launch (at most 10; port 22 is reserved). At most one entry may be `primary` — it must be http and is served at the instance's app URL (`https://<id>.apps.gpu.ai`) behind the per-instance basic-auth login. Requires `image`.
+     * @type {Array<CreateInstanceRequestPortsInner>}
+     * @memberof CreateInstanceRequest
+     */
+    ports?: Array<CreateInstanceRequestPortsInner>;
 }
 
 
@@ -150,6 +182,10 @@ export function CreateInstanceRequestFromJSONTyped(json: any, ignoreDiscriminato
         'diskGb': json['disk_gb'] == null ? undefined : json['disk_gb'],
         'env': json['env'] == null ? undefined : json['env'],
         'image': json['image'] == null ? undefined : json['image'],
+        'registryCredentialId': json['registry_credential_id'] == null ? undefined : json['registry_credential_id'],
+        'entrypoint': json['entrypoint'] == null ? undefined : json['entrypoint'],
+        'cmd': json['cmd'] == null ? undefined : json['cmd'],
+        'ports': json['ports'] == null ? undefined : ((json['ports'] as Array<any>).map(CreateInstanceRequestPortsInnerFromJSON)),
     };
 }
 
@@ -178,6 +214,10 @@ export function CreateInstanceRequestToJSONTyped(value?: CreateInstanceRequest |
         'disk_gb': value['diskGb'],
         'env': value['env'],
         'image': value['image'],
+        'registry_credential_id': value['registryCredentialId'],
+        'entrypoint': value['entrypoint'],
+        'cmd': value['cmd'],
+        'ports': value['ports'] == null ? undefined : ((value['ports'] as Array<any>).map(CreateInstanceRequestPortsInnerToJSON)),
     };
 }
 

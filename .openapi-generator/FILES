@@ -17,6 +17,8 @@ docs/CreateFineTuningJobRequestGpuai.md
 docs/CreateFineTuningJobRequestMethod.md
 docs/CreateFineTuningJobRequestMethodLora.md
 docs/CreateInstanceRequest.md
+docs/CreateInstanceRequestPortsInner.md
+docs/CreateRegistryCredentialRequest.md
 docs/CreateSshKeyRequest.md
 docs/CreateWebhookEndpointRequest.md
 docs/CryptoDeposit.md
@@ -47,6 +49,7 @@ docs/InstancePage.md
 docs/InstancesApi.md
 docs/ListCommunityMachines200Response.md
 docs/ListDeposits200Response.md
+docs/ListRegistryCredentials200Response.md
 docs/MetaApi.md
 docs/Model.md
 docs/ModelList.md
@@ -63,6 +66,8 @@ docs/PricingApi.md
 docs/PricingPage.md
 docs/Problem.md
 docs/RegisterCommunityMachineRequest.md
+docs/RegistryCredential.md
+docs/RegistryCredentialsApi.md
 docs/SSHKey.md
 docs/SSHKeyPage.md
 docs/SpendingLimit.md
@@ -98,6 +103,7 @@ src/apis/InstancesApi.ts
 src/apis/MetaApi.ts
 src/apis/OperationsApi.ts
 src/apis/PricingApi.ts
+src/apis/RegistryCredentialsApi.ts
 src/apis/SshKeysApi.ts
 src/apis/TemplatesApi.ts
 src/apis/UsageApi.ts
@@ -118,6 +124,8 @@ src/models/CreateFineTuningJobRequestGpuai.ts
 src/models/CreateFineTuningJobRequestMethod.ts
 src/models/CreateFineTuningJobRequestMethodLora.ts
 src/models/CreateInstanceRequest.ts
+src/models/CreateInstanceRequestPortsInner.ts
+src/models/CreateRegistryCredentialRequest.ts
 src/models/CreateSshKeyRequest.ts
 src/models/CreateWebhookEndpointRequest.ts
 src/models/CryptoDeposit.ts
@@ -143,6 +151,7 @@ src/models/InstanceConnection.ts
 src/models/InstancePage.ts
 src/models/ListCommunityMachines200Response.ts
 src/models/ListDeposits200Response.ts
+src/models/ListRegistryCredentials200Response.ts
 src/models/Model.ts
 src/models/ModelList.ts
 src/models/ModelParametersInner.ts
@@ -156,6 +165,7 @@ src/models/Pricing.ts
 src/models/PricingPage.ts
 src/models/Problem.ts
 src/models/RegisterCommunityMachineRequest.ts
+src/models/RegistryCredential.ts
 src/models/SSHKey.ts
 src/models/SSHKeyPage.ts
 src/models/SpendingLimit.ts
