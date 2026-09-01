@@ -16,6 +16,7 @@ Name | Type
 `pricePerHour` | number
 `connection` | [InstanceConnection](InstanceConnection.md)
 `diskGb` | number
+`image` | string
 `statusReason` | string
 `createdAt` | Date
 `readyAt` | Date
@@ -40,6 +41,7 @@ const example = {
   "pricePerHour": null,
   "connection": null,
   "diskGb": null,
+  "image": null,
   "statusReason": null,
   "createdAt": null,
   "readyAt": null,

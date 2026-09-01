@@ -92,11 +92,17 @@ export interface CreateInstanceRequest {
      */
     diskGb?: number;
     /**
-     * Per-deploy env overrides; only keys the template marks user_overridable are accepted (others 422). Secret values are redacted from operation metadata.
+     * Environment variables. With `template_id`: per-deploy overrides — only keys the template marks user_overridable are accepted (others 422), and secret values are redacted from operation metadata. With `image`: plain container env vars — keys must be POSIX names and the platform's reserved namespace (`PUBLIC_KEY`, `GPUAI_*`) is refused (422).
      * @type {{ [key: string]: string; }}
      * @memberof CreateInstanceRequest
      */
     env?: { [key: string]: string; };
+    /**
+     * Launch from your own container image, e.g. `pytorch/pytorch:2.4.1-cuda12.4-cudnn9-devel` or `ghcr.io/acme/trainer:v1`. The image must be publicly pullable (private registries are not yet supported) and provide linux/amd64 — both are verified synchronously before anything is provisioned: an unknown image returns 422 `image_unavailable` and a registry outage 502 `registry_unreachable`, with no operation created and nothing billed. The launch is pinned to the exact manifest digest verified, so a tag re-push cannot change what boots. After SSH/tunnel setup the image's own ENTRYPOINT/CMD is started (its output is in /var/log/gpuai-entrypoint.log on the instance); an image with neither is a plain SSH environment. Placement narrows to container-native capacity — a gpu_type only available on VM capacity returns 422 `image_unavailable`. Mutually exclusive with `template_id` and `environment` (422). A malformed reference (bad charset, localhost/private-IP registry) returns 400.
+     * @type {string}
+     * @memberof CreateInstanceRequest
+     */
+    image?: string;
 }
 
 
@@ -143,6 +149,7 @@ export function CreateInstanceRequestFromJSONTyped(json: any, ignoreDiscriminato
         'offeringId': json['offering_id'] == null ? undefined : json['offering_id'],
         'diskGb': json['disk_gb'] == null ? undefined : json['disk_gb'],
         'env': json['env'] == null ? undefined : json['env'],
+        'image': json['image'] == null ? undefined : json['image'],
     };
 }
 
@@ -170,6 +177,7 @@ export function CreateInstanceRequestToJSONTyped(value?: CreateInstanceRequest |
         'offering_id': value['offeringId'],
         'disk_gb': value['diskGb'],
         'env': value['env'],
+        'image': value['image'],
     };
 }
 

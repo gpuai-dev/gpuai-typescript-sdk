@@ -19,6 +19,7 @@ Name | Type
 `offeringId` | string
 `diskGb` | number
 `env` | { [key: string]: string; }
+`image` | string
 
 ## Example
 
@@ -40,6 +41,7 @@ const example = {
   "offeringId": null,
   "diskGb": 200,
   "env": null,
+  "image": ghcr.io/acme/trainer:v1,
 } satisfies CreateInstanceRequest
 
 console.log(example)

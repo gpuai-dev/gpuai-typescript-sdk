@@ -88,6 +88,12 @@ export interface Instance {
      */
     diskGb?: number;
     /**
+     * The customer-supplied container image this instance was launched from, digest-pinned at verification time (e.g. `ghcr.io/acme/trainer:v1@sha256:…`). Present only on custom-image launches; template and certified launches never expose their images here.
+     * @type {string}
+     * @memberof Instance
+     */
+    image?: string;
+    /**
      * Why the instance is in the error state, e.g. "provisioning stalled: the instance started but never became reachable". Present only on errored instances.
      * @type {string}
      * @memberof Instance
@@ -186,6 +192,7 @@ export function InstanceFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'pricePerHour': json['price_per_hour'],
         'connection': json['connection'] == null ? undefined : InstanceConnectionFromJSON(json['connection']),
         'diskGb': json['disk_gb'] == null ? undefined : json['disk_gb'],
+        'image': json['image'] == null ? undefined : json['image'],
         'statusReason': json['status_reason'] == null ? undefined : json['status_reason'],
         'createdAt': (new Date(json['created_at'])),
         'readyAt': json['ready_at'] == null ? undefined : (new Date(json['ready_at'])),
@@ -216,6 +223,7 @@ export function InstanceToJSONTyped(value?: Instance | null, ignoreDiscriminator
         'price_per_hour': value['pricePerHour'],
         'connection': InstanceConnectionToJSON(value['connection']),
         'disk_gb': value['diskGb'],
+        'image': value['image'],
         'status_reason': value['statusReason'],
         'created_at': value['createdAt'].toISOString(),
         'ready_at': value['readyAt'] == null ? value['readyAt'] : value['readyAt'].toISOString(),
