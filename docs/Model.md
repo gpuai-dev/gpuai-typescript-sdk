@@ -18,6 +18,8 @@ Name | Type
 `parameters` | [Array&lt;ModelParametersInner&gt;](ModelParametersInner.md)
 `pricing` | [ModelPricing](ModelPricing.md)
 `aliases` | Array&lt;string&gt;
+`fineTunable` | boolean
+`fineTuneBaseModel` | string
 `status` | string
 
 ## Example
@@ -39,6 +41,8 @@ const example = {
   "parameters": null,
   "pricing": null,
   "aliases": null,
+  "fineTunable": null,
+  "fineTuneBaseModel": null,
   "status": null,
 } satisfies Model
 

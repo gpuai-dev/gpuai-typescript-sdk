@@ -72,6 +72,10 @@ export interface ListFineTuningJobsRequest {
     limit?: number;
 }
 
+export interface RetrieveFileRequest {
+    id: string;
+}
+
 /**
  * 
  */
@@ -433,6 +437,61 @@ export class FineTuningApi extends runtime.BaseAPI {
      */
     async listFineTuningJobs(requestParameters: ListFineTuningJobsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FineTuningJobList> {
         const response = await this.listFineTuningJobsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for retrieveFile without sending the request
+     */
+    async retrieveFileRequestOpts(requestParameters: RetrieveFileRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling retrieveFile().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/files/{id}`;
+        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns the metadata for one of your uploaded files. The lookup is scoped to the organization the API key belongs to: a file id that does not exist and one that belongs to another organization both return the same 404, so this route cannot be used to probe for other tenants\' ids.  Use it to check that a `training_file` is present and usable BEFORE creating a fine-tuning job — the create path performs the identical ownership check, so a file this route returns is a file that create will accept.
+     * Retrieve a file (OpenAI-compatible)
+     */
+    async retrieveFileRaw(requestParameters: RetrieveFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FileObject>> {
+        const requestOptions = await this.retrieveFileRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FileObjectFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns the metadata for one of your uploaded files. The lookup is scoped to the organization the API key belongs to: a file id that does not exist and one that belongs to another organization both return the same 404, so this route cannot be used to probe for other tenants\' ids.  Use it to check that a `training_file` is present and usable BEFORE creating a fine-tuning job — the create path performs the identical ownership check, so a file this route returns is a file that create will accept.
+     * Retrieve a file (OpenAI-compatible)
+     */
+    async retrieveFile(requestParameters: RetrieveFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FileObject> {
+        const response = await this.retrieveFileRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

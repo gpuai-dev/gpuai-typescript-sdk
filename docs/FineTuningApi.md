@@ -10,6 +10,7 @@ All URIs are relative to *https://api.gpu.ai/v1*
 | [**getFineTuningJob**](FineTuningApi.md#getfinetuningjob) | **GET** /fine_tuning/jobs/{id} | Retrieve a fine-tuning job (OpenAI-compatible) |
 | [**listFineTuningJobEvents**](FineTuningApi.md#listfinetuningjobevents) | **GET** /fine_tuning/jobs/{id}/events | List fine-tuning job events (OpenAI-compatible) |
 | [**listFineTuningJobs**](FineTuningApi.md#listfinetuningjobs) | **GET** /fine_tuning/jobs | List fine-tuning jobs (OpenAI-compatible) |
+| [**retrieveFile**](FineTuningApi.md#retrievefile) | **GET** /files/{id} | Retrieve a file (OpenAI-compatible) |
 
 
 
@@ -463,6 +464,82 @@ example().catch(console.error);
 | **401** | Missing or invalid API key (OpenAI error envelope). |  -  |
 | **403** | API key lacks the required scope (OpenAI error envelope). |  -  |
 | **429** | Rate limit exceeded (OpenAI error envelope). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## retrieveFile
+
+> FileObject retrieveFile(id)
+
+Retrieve a file (OpenAI-compatible)
+
+Returns the metadata for one of your uploaded files. The lookup is scoped to the organization the API key belongs to: a file id that does not exist and one that belongs to another organization both return the same 404, so this route cannot be used to probe for other tenants\&#39; ids.  Use it to check that a &#x60;training_file&#x60; is present and usable BEFORE creating a fine-tuning job — the create path performs the identical ownership check, so a file this route returns is a file that create will accept.
+
+### Example
+
+```ts
+import {
+  Configuration,
+  FineTuningApi,
+} from '@gpuai/sdk';
+import type { RetrieveFileRequest } from '@gpuai/sdk';
+
+async function example() {
+  console.log("🚀 Testing @gpuai/sdk SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new FineTuningApi(config);
+
+  const body = {
+    // string | The file id returned by the upload, e.g. `file-9f2c1a...`.
+    id: id_example,
+  } satisfies RetrieveFileRequest;
+
+  try {
+    const data = await api.retrieveFile(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | `string` | The file id returned by the upload, e.g. &#x60;file-9f2c1a...&#x60;. | [Defaults to `undefined`] |
+
+### Return type
+
+[**FileObject**](FileObject.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | The file object. |  -  |
+| **401** | Missing or invalid API key (OpenAI error envelope). |  -  |
+| **403** | API key lacks the required scope (OpenAI error envelope). |  -  |
+| **404** | Model or resource not found (OpenAI error envelope). |  -  |
+| **429** | Rate limit exceeded (OpenAI error envelope). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **500** | Internal server error (OpenAI error envelope). |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

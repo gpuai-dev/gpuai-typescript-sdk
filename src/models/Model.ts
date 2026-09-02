@@ -107,6 +107,18 @@ export interface Model {
      */
     aliases?: Array<string>;
     /**
+     * Whether this model can be used as the base of a managed fine-tuning job. The tunable allowlist is operator-curated and much narrower than the serving catalog, so this is false for almost every model. Absent means false.
+     * @type {boolean}
+     * @memberof Model
+     */
+    fineTunable?: boolean;
+    /**
+     * The exact id to send as `model` when creating a fine-tuning job for this entry. Present only when `fine_tunable` is true, and deliberately distinct from `id`: the allowlist matches the customer-facing base id (e.g. `qwen2.5-7b-instruct`), which a served model normally carries as an alias rather than as its namespaced catalog id.
+     * @type {string}
+     * @memberof Model
+     */
+    fineTuneBaseModel?: string;
+    /**
      * 
      * @type {ModelStatusEnum}
      * @memberof Model
@@ -181,6 +193,8 @@ export function ModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Mod
         'parameters': json['parameters'] == null ? undefined : ((json['parameters'] as Array<any>).map(ModelParametersInnerFromJSON)),
         'pricing': ModelPricingFromJSON(json['pricing']),
         'aliases': json['aliases'] == null ? undefined : json['aliases'],
+        'fineTunable': json['fine_tunable'] == null ? undefined : json['fine_tunable'],
+        'fineTuneBaseModel': json['fine_tune_base_model'] == null ? undefined : json['fine_tune_base_model'],
         'status': json['status'],
     };
 }
@@ -208,6 +222,8 @@ export function ModelToJSONTyped(value?: Model | null, ignoreDiscriminator: bool
         'parameters': value['parameters'] == null ? undefined : ((value['parameters'] as Array<any>).map(ModelParametersInnerToJSON)),
         'pricing': ModelPricingToJSON(value['pricing']),
         'aliases': value['aliases'],
+        'fine_tunable': value['fineTunable'],
+        'fine_tune_base_model': value['fineTuneBaseModel'],
         'status': value['status'],
     };
 }
