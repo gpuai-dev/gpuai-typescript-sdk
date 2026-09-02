@@ -18,6 +18,7 @@ Name | Type
 `environment` | string
 `offeringId` | string
 `diskGb` | number
+`autoTerminateHours` | number
 `env` | { [key: string]: string; }
 `image` | string
 `registryCredentialId` | string
@@ -44,6 +45,7 @@ const example = {
   "environment": certified:pytorch@2.13,
   "offeringId": null,
   "diskGb": 200,
+  "autoTerminateHours": 8,
   "env": null,
   "image": ghcr.io/acme/trainer:v1,
   "registryCredentialId": null,

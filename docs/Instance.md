@@ -17,6 +17,8 @@ Name | Type
 `connection` | [InstanceConnection](InstanceConnection.md)
 `diskGb` | number
 `image` | string
+`autoTerminateHours` | number
+`autoTerminateAt` | Date
 `statusReason` | string
 `createdAt` | Date
 `readyAt` | Date
@@ -42,6 +44,8 @@ const example = {
   "connection": null,
   "diskGb": null,
   "image": null,
+  "autoTerminateHours": 8,
+  "autoTerminateAt": null,
   "statusReason": null,
   "createdAt": null,
   "readyAt": null,

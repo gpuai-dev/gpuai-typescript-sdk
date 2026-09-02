@@ -94,7 +94,19 @@ export interface Instance {
      */
     image?: string;
     /**
-     * Why the instance is in the error state, e.g. "provisioning stalled: the instance started but never became reachable". Present only on errored instances.
+     * The runtime limit this instance was launched with, in hours (the `auto_terminate_hours` you sent). Absent means the instance runs until something stops it. It stays present after the limit has fired, so a terminated instance still explains itself.
+     * @type {number}
+     * @memberof Instance
+     */
+    autoTerminateHours?: number;
+    /**
+     * When the runtime limit expires and the platform terminates this instance. Computed when the instance became running (ready_at + auto_terminate_hours), so the countdown covers usable runtime, not the time spent provisioning. Absent when no limit was set, when the instance is not running yet, or once the platform has begun acting on an elapsed limit.
+     * @type {Date}
+     * @memberof Instance
+     */
+    autoTerminateAt?: Date;
+    /**
+     * Why the instance stopped or failed, e.g. "provisioning stalled: the instance started but never became reachable", or — when a runtime limit fired — "Terminated: this instance reached the 8-hour runtime limit set at launch". Present only when the platform has something to explain.
      * @type {string}
      * @memberof Instance
      */
@@ -193,6 +205,8 @@ export function InstanceFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'connection': json['connection'] == null ? undefined : InstanceConnectionFromJSON(json['connection']),
         'diskGb': json['disk_gb'] == null ? undefined : json['disk_gb'],
         'image': json['image'] == null ? undefined : json['image'],
+        'autoTerminateHours': json['auto_terminate_hours'] == null ? undefined : json['auto_terminate_hours'],
+        'autoTerminateAt': json['auto_terminate_at'] == null ? undefined : (new Date(json['auto_terminate_at'])),
         'statusReason': json['status_reason'] == null ? undefined : json['status_reason'],
         'createdAt': (new Date(json['created_at'])),
         'readyAt': json['ready_at'] == null ? undefined : (new Date(json['ready_at'])),
@@ -224,6 +238,8 @@ export function InstanceToJSONTyped(value?: Instance | null, ignoreDiscriminator
         'connection': InstanceConnectionToJSON(value['connection']),
         'disk_gb': value['diskGb'],
         'image': value['image'],
+        'auto_terminate_hours': value['autoTerminateHours'],
+        'auto_terminate_at': value['autoTerminateAt'] == null ? value['autoTerminateAt'] : value['autoTerminateAt'].toISOString(),
         'status_reason': value['statusReason'],
         'created_at': value['createdAt'].toISOString(),
         'ready_at': value['readyAt'] == null ? value['readyAt'] : value['readyAt'].toISOString(),

@@ -100,6 +100,12 @@ export interface CreateInstanceRequest {
      */
     diskGb?: number;
     /**
+     * Terminate this instance automatically after this many hours of runtime. Omit for no limit (the default). The countdown starts when the instance reaches `running`, not when you call this — provisioning is neither billed nor counted against the limit — and the resolved deadline is returned as `auto_terminate_at` on every read. Enforcement is server-side and survives your process: this is the safety net for an unattended run whose client dies without cleaning up. When it fires the instance is terminated exactly as a DELETE would terminate it (billing stops, the `instance.terminated` webhook fires) and `status_reason` records that the limit was reached. Bounds: at least 1, at most 720 (30 days) — outside them returns 422 `validation_failed`. An explicit `0` is rejected rather than read as "no limit"; omit the field for that.
+     * @type {number}
+     * @memberof CreateInstanceRequest
+     */
+    autoTerminateHours?: number;
+    /**
      * Environment variables. With `template_id`: per-deploy overrides — only keys the template marks user_overridable are accepted (others 422), and secret values are redacted from operation metadata. With `image`: plain container env vars — keys must be POSIX names and the platform's reserved namespace (`PUBLIC_KEY`, `GPUAI_*`) is refused (422).
      * @type {{ [key: string]: string; }}
      * @memberof CreateInstanceRequest
@@ -180,6 +186,7 @@ export function CreateInstanceRequestFromJSONTyped(json: any, ignoreDiscriminato
         'environment': json['environment'] == null ? undefined : json['environment'],
         'offeringId': json['offering_id'] == null ? undefined : json['offering_id'],
         'diskGb': json['disk_gb'] == null ? undefined : json['disk_gb'],
+        'autoTerminateHours': json['auto_terminate_hours'] == null ? undefined : json['auto_terminate_hours'],
         'env': json['env'] == null ? undefined : json['env'],
         'image': json['image'] == null ? undefined : json['image'],
         'registryCredentialId': json['registry_credential_id'] == null ? undefined : json['registry_credential_id'],
@@ -212,6 +219,7 @@ export function CreateInstanceRequestToJSONTyped(value?: CreateInstanceRequest |
         'environment': value['environment'],
         'offering_id': value['offeringId'],
         'disk_gb': value['diskGb'],
+        'auto_terminate_hours': value['autoTerminateHours'],
         'env': value['env'],
         'image': value['image'],
         'registry_credential_id': value['registryCredentialId'],
