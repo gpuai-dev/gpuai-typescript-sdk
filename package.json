@@ -1,6 +1,6 @@
 {
   "name": "@gpuai/sdk",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "TypeScript SDK for the GPU.ai Public Developer API",
   "author": "GPU.ai Support <support@gpu.ai>",
   "repository": {
