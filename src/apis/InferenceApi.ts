@@ -609,6 +609,7 @@ export class InferenceApi extends runtime.BaseAPI {
 export const ListModelsModalityEnum = {
     Chat: 'chat',
     Image: 'image',
-    Video: 'video'
+    Video: 'video',
+    Embedding: 'embedding'
 } as const;
 export type ListModelsModalityEnum = typeof ListModelsModalityEnum[keyof typeof ListModelsModalityEnum];

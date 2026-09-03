@@ -71,7 +71,7 @@ export interface Model {
      */
     modality: ModelModalityEnum;
     /**
-     * Browse-facing category; mirrors modality (chat/image/video).
+     * Browse-facing category; mirrors modality (chat/image/video/embedding).
      * @type {string}
      * @memberof Model
      */
@@ -141,7 +141,8 @@ export type ModelObjectEnum = typeof ModelObjectEnum[keyof typeof ModelObjectEnu
 export const ModelModalityEnum = {
     Chat: 'chat',
     Image: 'image',
-    Video: 'video'
+    Video: 'video',
+    Embedding: 'embedding'
 } as const;
 export type ModelModalityEnum = typeof ModelModalityEnum[keyof typeof ModelModalityEnum];
 

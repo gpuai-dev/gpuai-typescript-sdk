@@ -579,7 +579,7 @@ async function example() {
   const api = new InferenceApi(config);
 
   const body = {
-    // 'chat' | 'image' | 'video' (optional)
+    // 'chat' | 'image' | 'video' | 'embedding' (optional)
     modality: modality_example,
   } satisfies ListModelsRequest;
 
@@ -600,7 +600,7 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **modality** | `chat`, `image`, `video` |  | [Optional] [Defaults to `undefined`] [Enum: chat, image, video] |
+| **modality** | `chat`, `image`, `video`, `embedding` |  | [Optional] [Defaults to `undefined`] [Enum: chat, image, video, embedding] |
 
 ### Return type
 
