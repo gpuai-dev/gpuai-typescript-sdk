@@ -124,13 +124,13 @@ export interface CreateInstanceRequest {
      */
     registryCredentialId?: string;
     /**
-     * Override the image's ENTRYPOINT (docker semantics — also drops the image CMD unless `cmd` is given). Omit to use the image's own. At most 32 arguments / 4KB. Requires `image`.
+     * Override the image's ENTRYPOINT (docker semantics — also drops the image CMD unless `cmd` is given). Omit to use the image's own; an explicit empty array clears it while keeping the image CMD (docker `--entrypoint ""` semantics). Empty strings inside a non-empty argv are rejected (422). At most 32 arguments / 4KB. Requires `image`.
      * @type {Array<string>}
      * @memberof CreateInstanceRequest
      */
     entrypoint?: Array<string>;
     /**
-     * Override the image's CMD. Omit to use the image's own (or none, when `entrypoint` is overridden). Requires `image`.
+     * Override the image's CMD. Omit to use the image's own (or none, when `entrypoint` is overridden with a non-empty argv; an empty-array entrypoint clear keeps the image CMD). An explicit empty array clears the CMD. Empty strings inside a non-empty argv are rejected (422). Requires `image`.
      * @type {Array<string>}
      * @memberof CreateInstanceRequest
      */
