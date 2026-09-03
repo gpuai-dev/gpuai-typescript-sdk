@@ -38,7 +38,7 @@ async function example() {
     gpuType: gpuType_example,
     // string | Exact-match filter on canonical region code (optional)
     region: region_example,
-    // 'spot' | 'on_demand' | Exact-match filter on tier (optional)
+    // 'spot' | 'on_demand' | Exact-match filter on tier. `spot` is soft-deprecated: spot capacity is currently unavailable sitewide (requests with tier=spot return no offerings); use on_demand. (optional)
     tier: tier_example,
     // boolean | Include offers whose current availability is zero (optional)
     includeUnavailable: true,
@@ -65,7 +65,7 @@ example().catch(console.error);
 | **limit** | `number` |  | [Optional] [Defaults to `50`] |
 | **gpuType** | `string` | Exact-match filter on gpu_type | [Optional] [Defaults to `undefined`] |
 | **region** | `string` | Exact-match filter on canonical region code | [Optional] [Defaults to `undefined`] |
-| **tier** | `spot`, `on_demand` | Exact-match filter on tier | [Optional] [Defaults to `undefined`] [Enum: spot, on_demand] |
+| **tier** | `spot`, `on_demand` | Exact-match filter on tier. &#x60;spot&#x60; is soft-deprecated: spot capacity is currently unavailable sitewide (requests with tier&#x3D;spot return no offerings); use on_demand. | [Optional] [Defaults to `undefined`] [Enum: spot, on_demand] |
 | **includeUnavailable** | `boolean` | Include offers whose current availability is zero | [Optional] [Defaults to `false`] |
 
 ### Return type

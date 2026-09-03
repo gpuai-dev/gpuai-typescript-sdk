@@ -64,7 +64,7 @@ export interface Instance {
      */
     region: string;
     /**
-     * 
+     * `spot` is soft-deprecated: spot capacity is currently unavailable sitewide (requests with tier=spot return no offerings); use on_demand.
      * @type {InstanceTierEnum}
      * @memberof Instance
      */
