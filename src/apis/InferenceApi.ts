@@ -24,6 +24,16 @@ import {
     ChatCompletionResponseToJSON,
 } from '../models/ChatCompletionResponse';
 import {
+    type EmbeddingsRequest,
+    EmbeddingsRequestFromJSON,
+    EmbeddingsRequestToJSON,
+} from '../models/EmbeddingsRequest';
+import {
+    type EmbeddingsResponse,
+    EmbeddingsResponseFromJSON,
+    EmbeddingsResponseToJSON,
+} from '../models/EmbeddingsResponse';
+import {
     type ImagesGenerationsRequest,
     ImagesGenerationsRequestFromJSON,
     ImagesGenerationsRequestToJSON,
@@ -70,6 +80,10 @@ export interface CancelVideoRequest {
 
 export interface CreateChatCompletionRequest {
     chatCompletionRequest: ChatCompletionRequest;
+}
+
+export interface CreateEmbeddingsRequest {
+    embeddingsRequest: EmbeddingsRequest;
 }
 
 export interface CreateImageRequest {
@@ -213,6 +227,63 @@ export class InferenceApi extends runtime.BaseAPI {
      */
     async createChatCompletion(requestParameters: CreateChatCompletionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ChatCompletionResponse> {
         const response = await this.createChatCompletionRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for createEmbeddings without sending the request
+     */
+    async createEmbeddingsRequestOpts(requestParameters: CreateEmbeddingsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['embeddingsRequest'] == null) {
+            throw new runtime.RequiredError(
+                'embeddingsRequest',
+                'Required parameter "embeddingsRequest" was null or undefined when calling createEmbeddings().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/embeddings`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EmbeddingsRequestToJSON(requestParameters['embeddingsRequest']),
+        };
+    }
+
+    /**
+     * Synchronous text embeddings. Accepts a single string or an array of up to 2048 strings, bounded so the response stays under 64 MiB (about 680 inputs at 4096 dimensions; fewer at a larger `dimensions` value) — over-limit requests are rejected with 400 before any processing. Returns one float vector per input, in request order. Billed on the upstream\'s reported prompt tokens at the model\'s listed input rate, rounded up to the next whole cent per request; an embeddings call emits no completion tokens, so `usage` carries `prompt_tokens` and `total_tokens` only. `encoding_format` accepts only `float` — a value of `base64` is rejected with `unsupported_parameter`. A chat model id on this route returns 404 `model_not_found`: the id is valid, but not on this surface.
+     * Create embeddings (OpenAI-compatible)
+     */
+    async createEmbeddingsRaw(requestParameters: CreateEmbeddingsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EmbeddingsResponse>> {
+        const requestOptions = await this.createEmbeddingsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EmbeddingsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Synchronous text embeddings. Accepts a single string or an array of up to 2048 strings, bounded so the response stays under 64 MiB (about 680 inputs at 4096 dimensions; fewer at a larger `dimensions` value) — over-limit requests are rejected with 400 before any processing. Returns one float vector per input, in request order. Billed on the upstream\'s reported prompt tokens at the model\'s listed input rate, rounded up to the next whole cent per request; an embeddings call emits no completion tokens, so `usage` carries `prompt_tokens` and `total_tokens` only. `encoding_format` accepts only `float` — a value of `base64` is rejected with `unsupported_parameter`. A chat model id on this route returns 404 `model_not_found`: the id is valid, but not on this surface.
+     * Create embeddings (OpenAI-compatible)
+     */
+    async createEmbeddings(requestParameters: CreateEmbeddingsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EmbeddingsResponse> {
+        const response = await this.createEmbeddingsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
