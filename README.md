@@ -1,4 +1,4 @@
-# @gpuai/sdk@0.3.13
+# @gpuai/sdk@0.3.14
 
 A TypeScript SDK client for the api.gpu.ai API.
 
@@ -16,9 +16,9 @@ Next, try it out.
 ```ts
 import {
   Configuration,
-  BillingApi,
+  AutolaunchApi,
 } from '@gpuai/sdk';
-import type { CreateCryptoDepositOperationRequest } from '@gpuai/sdk';
+import type { CreateAutolaunchRuleRequest } from '@gpuai/sdk';
 
 async function example() {
   console.log("🚀 Testing @gpuai/sdk SDK...");
@@ -26,15 +26,17 @@ async function example() {
     // Configure HTTP bearer authorization: bearerAuth
     accessToken: "YOUR BEARER TOKEN",
   });
-  const api = new BillingApi(config);
+  const api = new AutolaunchApi(config);
 
   const body = {
-    // CreateCryptoDepositRequest
-    createCryptoDepositRequest: ...,
-  } satisfies CreateCryptoDepositOperationRequest;
+    // AutolaunchRuleCreate
+    autolaunchRuleCreate: ...,
+    // string (optional)
+    idempotencyKey: idempotencyKey_example,
+  } satisfies CreateAutolaunchRuleRequest;
 
   try {
-    const data = await api.createCryptoDeposit(body);
+    const data = await api.createAutolaunchRule(body);
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -54,6 +56,11 @@ All URIs are relative to *https://api.gpu.ai/v1*
 
 | Class | Method | HTTP request | Description
 | ----- | ------ | ------------ | -------------
+*AutolaunchApi* | [**createAutolaunchRule**](docs/AutolaunchApi.md#createautolaunchrule) | **POST** /autolaunch-rules | Create an auto-launch rule (pre-approves a bounded, unattended spend)
+*AutolaunchApi* | [**deleteAutolaunchRule**](docs/AutolaunchApi.md#deleteautolaunchrule) | **DELETE** /autolaunch-rules/{id} | Cancel an auto-launch rule
+*AutolaunchApi* | [**disarmAutolaunchRule**](docs/AutolaunchApi.md#disarmautolaunchrule) | **PATCH** /autolaunch-rules/{id} | Disarm an auto-launch rule
+*AutolaunchApi* | [**getAutolaunchRule**](docs/AutolaunchApi.md#getautolaunchrule) | **GET** /autolaunch-rules/{id} | Get an auto-launch rule
+*AutolaunchApi* | [**listAutolaunchRules**](docs/AutolaunchApi.md#listautolaunchrules) | **GET** /autolaunch-rules | List auto-launch rules
 *BillingApi* | [**createCryptoDeposit**](docs/BillingApi.md#createcryptodepositoperation) | **POST** /billing/deposits/crypto | Create a stablecoin deposit
 *BillingApi* | [**getDeposit**](docs/BillingApi.md#getdeposit) | **GET** /billing/deposits/{id} | Get one stablecoin deposit
 *BillingApi* | [**getSpendingLimit**](docs/BillingApi.md#getspendinglimit) | **GET** /billing/spending-limit | Get the org spending limit
@@ -89,6 +96,7 @@ All URIs are relative to *https://api.gpu.ai/v1*
 *InstancesApi* | [**getInstance**](docs/InstancesApi.md#getinstance) | **GET** /instances/{id} | Get an instance
 *InstancesApi* | [**listInstances**](docs/InstancesApi.md#listinstances) | **GET** /instances | List instances
 *InstancesApi* | [**updateInstance**](docs/InstancesApi.md#updateinstanceoperation) | **PATCH** /instances/{id} | Update an instance (rename only in v1)
+*MarketApi* | [**getMarketHistory**](docs/MarketApi.md#getmarkethistory) | **GET** /market-history | Get a GPU\&#39;s price and availability over time
 *MetaApi* | [**getHealth**](docs/MetaApi.md#gethealth) | **GET** /health | Liveness probe
 *MetaApi* | [**getOpenApiSpec**](docs/MetaApi.md#getopenapispec) | **GET** /openapi.json | OpenAPI 3.1 specification
 *OperationsApi* | [**getOperation**](docs/OperationsApi.md#getoperation) | **GET** /operations/{id} | Get an async operation status
@@ -103,6 +111,11 @@ All URIs are relative to *https://api.gpu.ai/v1*
 *TemplatesApi* | [**getTemplate**](docs/TemplatesApi.md#gettemplate) | **GET** /templates/{id} | Get one deployable application template
 *TemplatesApi* | [**listTemplates**](docs/TemplatesApi.md#listtemplates) | **GET** /templates | List deployable application templates
 *UsageApi* | [**listUsage**](docs/UsageApi.md#listusage) | **GET** /usage | Time-bucketed usage
+*WatchApi* | [**createWatchRule**](docs/WatchApi.md#createwatchrule) | **POST** /watch-rules | Create a watch rule
+*WatchApi* | [**deleteWatchRule**](docs/WatchApi.md#deletewatchrule) | **DELETE** /watch-rules/{id} | Delete a watch rule
+*WatchApi* | [**getWatchRule**](docs/WatchApi.md#getwatchrule) | **GET** /watch-rules/{id} | Get a watch rule
+*WatchApi* | [**listWatchRules**](docs/WatchApi.md#listwatchrules) | **GET** /watch-rules | List watch rules
+*WatchApi* | [**updateWatchRule**](docs/WatchApi.md#updatewatchrule) | **PATCH** /watch-rules/{id} | Update a watch rule
 *WebhooksApi* | [**createWebhookEndpoint**](docs/WebhooksApi.md#createwebhookendpointoperation) | **POST** /webhook-endpoints | Create a webhook endpoint
 *WebhooksApi* | [**deleteWebhookEndpoint**](docs/WebhooksApi.md#deletewebhookendpoint) | **DELETE** /webhook-endpoints/{id} | Delete a webhook endpoint
 *WebhooksApi* | [**getWebhookEndpoint**](docs/WebhooksApi.md#getwebhookendpoint) | **GET** /webhook-endpoints/{id} | Get a webhook endpoint
@@ -111,6 +124,10 @@ All URIs are relative to *https://api.gpu.ai/v1*
 
 ### Models
 
+- [AutolaunchRule](docs/AutolaunchRule.md)
+- [AutolaunchRuleCreate](docs/AutolaunchRuleCreate.md)
+- [AutolaunchRuleDisarm](docs/AutolaunchRuleDisarm.md)
+- [AutolaunchRulePage](docs/AutolaunchRulePage.md)
 - [ChatChoice](docs/ChatChoice.md)
 - [ChatCompletionRequest](docs/ChatCompletionRequest.md)
 - [ChatCompletionResponse](docs/ChatCompletionResponse.md)
@@ -158,6 +175,8 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [ListCommunityMachines200Response](docs/ListCommunityMachines200Response.md)
 - [ListDeposits200Response](docs/ListDeposits200Response.md)
 - [ListRegistryCredentials200Response](docs/ListRegistryCredentials200Response.md)
+- [MarketHistoryPoint](docs/MarketHistoryPoint.md)
+- [MarketHistoryResponse](docs/MarketHistoryResponse.md)
 - [Model](docs/Model.md)
 - [ModelList](docs/ModelList.md)
 - [ModelParametersInner](docs/ModelParametersInner.md)
@@ -190,6 +209,10 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [VideoCreateRequest](docs/VideoCreateRequest.md)
 - [VideoJob](docs/VideoJob.md)
 - [VideoList](docs/VideoList.md)
+- [WatchRule](docs/WatchRule.md)
+- [WatchRuleCreate](docs/WatchRuleCreate.md)
+- [WatchRulePage](docs/WatchRulePage.md)
+- [WatchRuleUpdate](docs/WatchRuleUpdate.md)
 - [WebhookEndpoint](docs/WebhookEndpoint.md)
 - [WebhookEndpointPage](docs/WebhookEndpointPage.md)
 
@@ -210,7 +233,7 @@ and is automatically generated by the
 [OpenAPI Generator](https://openapi-generator.tech) project:
 
 - API version: `1.0.0`
-- Package version: `0.3.13`
+- Package version: `0.3.14`
 - Generator version: `7.24.0`
 - Build package: `org.openapitools.codegen.languages.TypeScriptFetchClientCodegen`
 

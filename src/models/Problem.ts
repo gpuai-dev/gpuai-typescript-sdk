@@ -78,6 +78,7 @@ export const ProblemCodeEnum = {
     InsufficientBalance: 'insufficient_balance',
     QuotaExceeded: 'quota_exceeded',
     RateLimited: 'rate_limited',
+    CreatorCheckUnavailable: 'creator_check_unavailable',
     InternalError: 'internal_error',
     OperationFailed: 'operation_failed'
 } as const;

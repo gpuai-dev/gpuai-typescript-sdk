@@ -1,5 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
+export * from './AutolaunchRule';
+export * from './AutolaunchRuleCreate';
+export * from './AutolaunchRuleDisarm';
+export * from './AutolaunchRulePage';
 export * from './ChatChoice';
 export * from './ChatCompletionRequest';
 export * from './ChatCompletionResponse';
@@ -47,6 +51,8 @@ export * from './InstancePage';
 export * from './ListCommunityMachines200Response';
 export * from './ListDeposits200Response';
 export * from './ListRegistryCredentials200Response';
+export * from './MarketHistoryPoint';
+export * from './MarketHistoryResponse';
 export * from './Model';
 export * from './ModelList';
 export * from './ModelParametersInner';
@@ -79,5 +85,9 @@ export * from './VMImage';
 export * from './VideoCreateRequest';
 export * from './VideoJob';
 export * from './VideoList';
+export * from './WatchRule';
+export * from './WatchRuleCreate';
+export * from './WatchRulePage';
+export * from './WatchRuleUpdate';
 export * from './WebhookEndpoint';
 export * from './WebhookEndpointPage';
