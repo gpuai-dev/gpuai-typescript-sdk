@@ -49,6 +49,20 @@ export interface MarketHistoryResponse {
      */
     capacityClass: string;
     /**
+     * Echoes the request. 0 means the series is MERGED across every node shape, the same thing an omitted parameter meant on the way in.
+     * @type {number}
+     * @memberof MarketHistoryResponse
+     */
+    clusterSize: number;
+    /**
+     * The node shapes that actually have rows in this window, for this gpu_model / region / capacity_class — what a size picker may honestly offer.
+     * 
+     * This is what we SAMPLED, not what we may ever sell: offering a shape a model was never listed at draws an empty chart a caller reads as a stockout. An empty array means we looked and found none. It is unaffected by the cluster_size parameter, so a picker's options never depend on which option is currently selected.
+     * @type {Array<number>}
+     * @memberof MarketHistoryResponse
+     */
+    availableClusterSizes: Array<number>;
+    /**
      * Resolution the server actually answered at. Echoed because the wide views downsample at query time, so a client must never assume 900.
      * @type {number}
      * @memberof MarketHistoryResponse
@@ -69,6 +83,8 @@ export function instanceOfMarketHistoryResponse(value: object): value is MarketH
     if ((!('gpuModel' in (value as Record<string, any>)) && !('gpu_model' in (value as Record<string, any>))) || ((value as Record<string, any>)['gpuModel'] === undefined && (value as Record<string, any>)['gpu_model'] === undefined)) return false;
     if (!('region' in value) || value['region'] === undefined) return false;
     if ((!('capacityClass' in (value as Record<string, any>)) && !('capacity_class' in (value as Record<string, any>))) || ((value as Record<string, any>)['capacityClass'] === undefined && (value as Record<string, any>)['capacity_class'] === undefined)) return false;
+    if ((!('clusterSize' in (value as Record<string, any>)) && !('cluster_size' in (value as Record<string, any>))) || ((value as Record<string, any>)['clusterSize'] === undefined && (value as Record<string, any>)['cluster_size'] === undefined)) return false;
+    if ((!('availableClusterSizes' in (value as Record<string, any>)) && !('available_cluster_sizes' in (value as Record<string, any>))) || ((value as Record<string, any>)['availableClusterSizes'] === undefined && (value as Record<string, any>)['available_cluster_sizes'] === undefined)) return false;
     if ((!('bucketSeconds' in (value as Record<string, any>)) && !('bucket_seconds' in (value as Record<string, any>))) || ((value as Record<string, any>)['bucketSeconds'] === undefined && (value as Record<string, any>)['bucket_seconds'] === undefined)) return false;
     if (!('points' in value) || value['points'] === undefined) return false;
     return true;
@@ -87,6 +103,8 @@ export function MarketHistoryResponseFromJSONTyped(json: any, ignoreDiscriminato
         'gpuModel': json['gpu_model'],
         'region': json['region'],
         'capacityClass': json['capacity_class'],
+        'clusterSize': json['cluster_size'],
+        'availableClusterSizes': json['available_cluster_sizes'],
         'bucketSeconds': json['bucket_seconds'],
         'points': ((json['points'] as Array<any>).map(MarketHistoryPointFromJSON)),
     };
@@ -106,6 +124,8 @@ export function MarketHistoryResponseToJSONTyped(value?: MarketHistoryResponse |
         'gpu_model': value['gpuModel'],
         'region': value['region'],
         'capacity_class': value['capacityClass'],
+        'cluster_size': value['clusterSize'],
+        'available_cluster_sizes': value['availableClusterSizes'],
         'bucket_seconds': value['bucketSeconds'],
         'points': ((value['points'] as Array<any>).map(MarketHistoryPointToJSON)),
     };

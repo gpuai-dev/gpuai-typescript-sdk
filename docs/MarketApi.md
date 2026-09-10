@@ -10,7 +10,7 @@ All URIs are relative to *https://api.gpu.ai/v1*
 
 ## getMarketHistory
 
-> MarketHistoryResponse getMarketHistory(gpuModel, region, capacityClass, bucket, from, to)
+> MarketHistoryResponse getMarketHistory(gpuModel, region, capacityClass, clusterSize, bucket, from, to)
 
 Get a GPU\&#39;s price and availability over time
 
@@ -34,12 +34,14 @@ async function example() {
   const api = new MarketApi(config);
 
   const body = {
-    // string | GPU model to chart, e.g. \"H100\". Required — it is the leading column of the lookup index.
+    // string | GPU model id to chart, e.g. \"h100_sxm\". Required — it is the leading column of the lookup index.
     gpuModel: gpuModel_example,
     // string | Canonical region to narrow the series to. Omit to MERGE every region rather than to filter on the empty string. (optional)
     region: region_example,
     // 'secure' | 'community' | Capacity class to narrow the series to. Omit to merge both. (optional)
     capacityClass: capacityClass_example,
+    // 1 | 2 | 4 | 8 | 10 | 16 | Node shape to narrow the series to — 8 means 8-GPU nodes. Omit to MERGE every shape, which is the default and the only view that rows recorded before the per-size split can honestly appear in.  A 1-GPU box and an 8-GPU node are different products at different per-GPU rates, so this is a real dimension of the series and not a display filter. Only shapes we actually sell are accepted: an arbitrary integer would return an empty series indistinguishable from a genuine gap, and this surface exists so \"no data\" and \"nothing to have data about\" are never the same answer. Use available_cluster_sizes from the response to populate a picker — it reports what this GPU was actually listed as in this window, which is narrower than what we may ever sell. (optional)
+    clusterSize: 56,
     // '15m' | '1d' | Resolution. Only these two values are accepted: the series cannot be returned finer than it was stored. (optional)
     bucket: bucket_example,
     // Date | Start of the window (RFC3339). Defaults to 7 days before `to`. (optional)
@@ -65,9 +67,10 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **gpuModel** | `string` | GPU model to chart, e.g. \&quot;H100\&quot;. Required — it is the leading column of the lookup index. | [Defaults to `undefined`] |
+| **gpuModel** | `string` | GPU model id to chart, e.g. \&quot;h100_sxm\&quot;. Required — it is the leading column of the lookup index. | [Defaults to `undefined`] |
 | **region** | `string` | Canonical region to narrow the series to. Omit to MERGE every region rather than to filter on the empty string. | [Optional] [Defaults to `undefined`] |
 | **capacityClass** | `secure`, `community` | Capacity class to narrow the series to. Omit to merge both. | [Optional] [Defaults to `undefined`] [Enum: secure, community] |
+| **clusterSize** | `1`, `2`, `4`, `8`, `10`, `16` | Node shape to narrow the series to — 8 means 8-GPU nodes. Omit to MERGE every shape, which is the default and the only view that rows recorded before the per-size split can honestly appear in.  A 1-GPU box and an 8-GPU node are different products at different per-GPU rates, so this is a real dimension of the series and not a display filter. Only shapes we actually sell are accepted: an arbitrary integer would return an empty series indistinguishable from a genuine gap, and this surface exists so \&quot;no data\&quot; and \&quot;nothing to have data about\&quot; are never the same answer. Use available_cluster_sizes from the response to populate a picker — it reports what this GPU was actually listed as in this window, which is narrower than what we may ever sell. | [Optional] [Defaults to `undefined`] [Enum: 1, 2, 4, 8, 10, 16] |
 | **bucket** | `15m`, `1d` | Resolution. Only these two values are accepted: the series cannot be returned finer than it was stored. | [Optional] [Defaults to `&#39;15m&#39;`] [Enum: 15m, 1d] |
 | **from** | `Date` | Start of the window (RFC3339). Defaults to 7 days before &#x60;to&#x60;. | [Optional] [Defaults to `undefined`] |
 | **to** | `Date` | End of the window (RFC3339). Defaults to now; a future value is clamped to now, since no bucket can exist for a time that has not happened. | [Optional] [Defaults to `undefined`] |

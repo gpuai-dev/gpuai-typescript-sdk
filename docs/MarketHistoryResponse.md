@@ -10,6 +10,8 @@ Name | Type
 `gpuModel` | string
 `region` | string
 `capacityClass` | string
+`clusterSize` | number
+`availableClusterSizes` | Array&lt;number&gt;
 `bucketSeconds` | number
 `points` | [Array&lt;MarketHistoryPoint&gt;](MarketHistoryPoint.md)
 
@@ -23,6 +25,8 @@ const example = {
   "gpuModel": null,
   "region": null,
   "capacityClass": null,
+  "clusterSize": null,
+  "availableClusterSizes": null,
   "bucketSeconds": null,
   "points": null,
 } satisfies MarketHistoryResponse

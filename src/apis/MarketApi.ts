@@ -28,6 +28,7 @@ export interface GetMarketHistoryRequest {
     gpuModel: string;
     region?: string;
     capacityClass?: GetMarketHistoryCapacityClassEnum;
+    clusterSize?: GetMarketHistoryClusterSizeEnum;
     bucket?: GetMarketHistoryBucketEnum;
     from?: Date;
     to?: Date;
@@ -61,6 +62,10 @@ export class MarketApi extends runtime.BaseAPI {
 
         if (requestParameters['capacityClass'] != null) {
             queryParameters['capacity_class'] = requestParameters['capacityClass'];
+        }
+
+        if (requestParameters['clusterSize'] != null) {
+            queryParameters['cluster_size'] = requestParameters['clusterSize'];
         }
 
         if (requestParameters['bucket'] != null) {
@@ -126,6 +131,18 @@ export const GetMarketHistoryCapacityClassEnum = {
     Community: 'community'
 } as const;
 export type GetMarketHistoryCapacityClassEnum = typeof GetMarketHistoryCapacityClassEnum[keyof typeof GetMarketHistoryCapacityClassEnum];
+/**
+ * @export
+ */
+export const GetMarketHistoryClusterSizeEnum = {
+    NUMBER_1: 1,
+    NUMBER_2: 2,
+    NUMBER_4: 4,
+    NUMBER_8: 8,
+    NUMBER_10: 10,
+    NUMBER_16: 16
+} as const;
+export type GetMarketHistoryClusterSizeEnum = typeof GetMarketHistoryClusterSizeEnum[keyof typeof GetMarketHistoryClusterSizeEnum];
 /**
  * @export
  */
