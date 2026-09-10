@@ -14,6 +14,11 @@
 
 import * as runtime from '../runtime';
 import {
+    type Balance,
+    BalanceFromJSON,
+    BalanceToJSON,
+} from '../models/Balance';
+import {
     type CreateCryptoDepositRequest,
     CreateCryptoDepositRequestFromJSON,
     CreateCryptoDepositRequestToJSON,
@@ -115,6 +120,53 @@ export class BillingApi extends runtime.BaseAPI {
      */
     async createCryptoDeposit(requestParameters: CreateCryptoDepositOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CryptoDeposit> {
         const response = await this.createCryptoDepositRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getBalance without sending the request
+     */
+    async getBalanceRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/billing/balance`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns the organization\'s credit balance, its auto-pay configuration, and the live burn rate. Requires the `billing:read` scope. The organization is taken from the authenticated API key, never from a parameter.  Divide `balance_cents` by `burn_cents_per_hour` for the remaining runway in hours. The quotient is undefined in three cases a caller must keep apart: `burn_cents_per_hour` is 0 (nothing running, so the balance funds unbounded idle time), it is `null` (the burn rate could not be determined — NOT the same as idle), or the balance is already at or below zero.  This is the balance itself — for spend against a configured cap see `/billing/spending-limit`, and for past consumption see `/usage`. 
+     * Get the org credit balance
+     */
+    async getBalanceRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Balance>> {
+        const requestOptions = await this.getBalanceRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BalanceFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns the organization\'s credit balance, its auto-pay configuration, and the live burn rate. Requires the `billing:read` scope. The organization is taken from the authenticated API key, never from a parameter.  Divide `balance_cents` by `burn_cents_per_hour` for the remaining runway in hours. The quotient is undefined in three cases a caller must keep apart: `burn_cents_per_hour` is 0 (nothing running, so the balance funds unbounded idle time), it is `null` (the burn rate could not be determined — NOT the same as idle), or the balance is already at or below zero.  This is the balance itself — for spend against a configured cap see `/billing/spending-limit`, and for past consumption see `/usage`. 
+     * Get the org credit balance
+     */
+    async getBalance(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Balance> {
+        const response = await this.getBalanceRaw(initOverrides);
         return await response.value();
     }
 

@@ -4,6 +4,7 @@ export * from './AutolaunchRule';
 export * from './AutolaunchRuleCreate';
 export * from './AutolaunchRuleDisarm';
 export * from './AutolaunchRulePage';
+export * from './Balance';
 export * from './ChatChoice';
 export * from './ChatCompletionRequest';
 export * from './ChatCompletionResponse';

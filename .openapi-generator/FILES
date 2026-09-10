@@ -6,6 +6,7 @@ docs/AutolaunchRule.md
 docs/AutolaunchRuleCreate.md
 docs/AutolaunchRuleDisarm.md
 docs/AutolaunchRulePage.md
+docs/Balance.md
 docs/BillingApi.md
 docs/ChatChoice.md
 docs/ChatCompletionRequest.md
@@ -135,6 +136,7 @@ src/models/AutolaunchRule.ts
 src/models/AutolaunchRuleCreate.ts
 src/models/AutolaunchRuleDisarm.ts
 src/models/AutolaunchRulePage.ts
+src/models/Balance.ts
 src/models/ChatChoice.ts
 src/models/ChatCompletionRequest.ts
 src/models/ChatCompletionResponse.ts
