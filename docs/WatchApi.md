@@ -82,7 +82,7 @@ example().catch(console.error);
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | Created |  -  |
-| **422** | Validation failed — an unknown condition kind, a non-canonical region, a missing threshold on a threshold condition, an override id that is not an endpoint registered by this organization, a field naming a catalog listing or a delivery address, or the enabled-rule limit already reached.  |  -  |
+| **422** | Validation failed — a gpu_model that is not a GPU model we list (the detail names the closest ids when there are any), an unknown condition kind, a non-canonical region, a missing threshold on a threshold condition, an override id that is not an endpoint registered by this organization, a field naming a catalog listing or a delivery address, or the enabled-rule limit already reached.  |  -  |
 | **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **0** | Error response (RFC 7807) |  -  |
 
@@ -381,7 +381,7 @@ example().catch(console.error);
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | OK |  -  |
-| **422** | Validation failed against the MERGED rule — for example switching to a threshold condition on a rule that has no stored threshold.  |  -  |
+| **422** | Validation failed against the MERGED rule — for example switching to a threshold condition on a rule that has no stored threshold, or re-targeting the rule at a gpu_model we do not list. A gpu_model already stored is only re-checked when the key is SENT, so a rule can always be parked or deleted whatever it holds.  |  -  |
 | **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **0** | Error response (RFC 7807) |  -  |
 
