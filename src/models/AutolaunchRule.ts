@@ -27,7 +27,8 @@ export interface AutolaunchRule {
      */
     id: string;
     /**
-     * The GPU model the rule watches and launches, e.g. "H100".
+     * The canonical GPU model id the rule targets and launches, e.g. "h100_sxm" — a MODEL, not a generation. "H100" names three differently priced SKUs, matches nothing in the catalog, and is refused: a rule that can never fire is a standing purchase order the customer believes is armed. Case and punctuation are forgiving ("RTX-A4000" resolves to "rtx_a4000") and the canonical id is what is stored. It must also match spec.gpu_type, or the rule would wait on one market and buy from another.
+     * 
      * @type {string}
      * @memberof AutolaunchRule
      */
