@@ -62,6 +62,9 @@ docs/FunctionsApi.md
 docs/GPUType.md
 docs/GPUTypePage.md
 docs/GetHealth200Response.md
+docs/GpuSuggestion.md
+docs/GpuSuggestionCheaper.md
+docs/GpuSuggestionGpu.md
 docs/GpuTypesApi.md
 docs/ImagesGenerationsRequest.md
 docs/ImagesResponse.md
@@ -71,6 +74,7 @@ docs/IncludeItem.md
 docs/InferenceApi.md
 docs/Instance.md
 docs/InstanceConnection.md
+docs/InstanceGpuMemory.md
 docs/InstancePage.md
 docs/InstancesApi.md
 docs/Invoice.md
@@ -208,6 +212,9 @@ src/models/FunctionVersion.ts
 src/models/GPUType.ts
 src/models/GPUTypePage.ts
 src/models/GetHealth200Response.ts
+src/models/GpuSuggestion.ts
+src/models/GpuSuggestionCheaper.ts
+src/models/GpuSuggestionGpu.ts
 src/models/ImagesGenerationsRequest.ts
 src/models/ImagesResponse.ts
 src/models/ImagesResponseDataInner.ts
@@ -215,6 +222,7 @@ src/models/ImagesResponseUsage.ts
 src/models/IncludeItem.ts
 src/models/Instance.ts
 src/models/InstanceConnection.ts
+src/models/InstanceGpuMemory.ts
 src/models/InstancePage.ts
 src/models/Invoice.ts
 src/models/InvoiceList.ts

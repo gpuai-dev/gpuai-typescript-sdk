@@ -20,6 +20,13 @@ import {
     InstanceConnectionToJSON,
     InstanceConnectionToJSONTyped,
 } from './InstanceConnection';
+import type { InstanceGpuMemory } from './InstanceGpuMemory';
+import {
+    InstanceGpuMemoryFromJSON,
+    InstanceGpuMemoryFromJSONTyped,
+    InstanceGpuMemoryToJSON,
+    InstanceGpuMemoryToJSONTyped,
+} from './InstanceGpuMemory';
 
 /**
  * 
@@ -75,6 +82,12 @@ export interface Instance {
      * @memberof Instance
      */
     pricePerHour: number;
+    /**
+     * 
+     * @type {InstanceGpuMemory}
+     * @memberof Instance
+     */
+    gpuMemory?: InstanceGpuMemory;
     /**
      * 
      * @type {InstanceConnection}
@@ -202,6 +215,7 @@ export function InstanceFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'region': json['region'],
         'tier': json['tier'],
         'pricePerHour': json['price_per_hour'],
+        'gpuMemory': json['gpu_memory'] == null ? undefined : InstanceGpuMemoryFromJSON(json['gpu_memory']),
         'connection': json['connection'] == null ? undefined : InstanceConnectionFromJSON(json['connection']),
         'diskGb': json['disk_gb'] == null ? undefined : json['disk_gb'],
         'image': json['image'] == null ? undefined : json['image'],
@@ -235,6 +249,7 @@ export function InstanceToJSONTyped(value?: Instance | null, ignoreDiscriminator
         'region': value['region'],
         'tier': value['tier'],
         'price_per_hour': value['pricePerHour'],
+        'gpu_memory': InstanceGpuMemoryToJSON(value['gpuMemory']),
         'connection': InstanceConnectionToJSON(value['connection']),
         'disk_gb': value['diskGb'],
         'image': value['image'],

@@ -19,6 +19,11 @@ import {
     CreateInstanceRequestToJSON,
 } from '../models/CreateInstanceRequest';
 import {
+    type GpuSuggestion,
+    GpuSuggestionFromJSON,
+    GpuSuggestionToJSON,
+} from '../models/GpuSuggestion';
+import {
     type Instance,
     InstanceFromJSON,
     InstanceToJSON,
@@ -57,6 +62,10 @@ export interface DeleteInstanceRequest {
 export interface GetInstanceRequest {
     id: string;
     include?: GetInstanceIncludeEnum;
+}
+
+export interface GetInstanceGpuSuggestionRequest {
+    id: string;
 }
 
 export interface ListInstancesRequest {
@@ -248,6 +257,61 @@ export class InstancesApi extends runtime.BaseAPI {
      */
     async getInstance(requestParameters: GetInstanceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Instance> {
         const response = await this.getInstanceRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getInstanceGpuSuggestion without sending the request
+     */
+    async getInstanceGpuSuggestionRequestOpts(requestParameters: GetInstanceGpuSuggestionRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling getInstanceGpuSuggestion().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/instances/{id}/gpu-suggestion`;
+        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Compares the highest GPU memory this instance has used (its `gpu_memory` peak, plus headroom) with the GPU models currently listed, and names the cheapest model that would have fit when the saving is worth a look. It never changes anything: it reports what the telemetry shows. Memory use can grow later, so treat it as a starting point.  `status` is `insufficient_data` until the instance has about an hour of telemetry, `no_cheaper_fit` when no cheaper listed model covers the peak, and `suggestion` when one does. Requires the `instances:read` scope. An instance owned by another organization returns 404. 
+     * Suggest a lower-priced GPU for an instance
+     */
+    async getInstanceGpuSuggestionRaw(requestParameters: GetInstanceGpuSuggestionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GpuSuggestion>> {
+        const requestOptions = await this.getInstanceGpuSuggestionRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GpuSuggestionFromJSON(jsonValue));
+    }
+
+    /**
+     * Compares the highest GPU memory this instance has used (its `gpu_memory` peak, plus headroom) with the GPU models currently listed, and names the cheapest model that would have fit when the saving is worth a look. It never changes anything: it reports what the telemetry shows. Memory use can grow later, so treat it as a starting point.  `status` is `insufficient_data` until the instance has about an hour of telemetry, `no_cheaper_fit` when no cheaper listed model covers the peak, and `suggestion` when one does. Requires the `instances:read` scope. An instance owned by another organization returns 404. 
+     * Suggest a lower-priced GPU for an instance
+     */
+    async getInstanceGpuSuggestion(requestParameters: GetInstanceGpuSuggestionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GpuSuggestion> {
+        const response = await this.getInstanceGpuSuggestionRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

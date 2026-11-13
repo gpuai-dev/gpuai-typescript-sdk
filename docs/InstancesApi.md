@@ -7,6 +7,7 @@ All URIs are relative to *https://api.gpu.ai/v1*
 | [**createInstance**](InstancesApi.md#createinstanceoperation) | **POST** /instances | Create an instance (async — returns 202 + Operation-Id header) |
 | [**deleteInstance**](InstancesApi.md#deleteinstance) | **DELETE** /instances/{id} | Terminate an instance (idempotent) |
 | [**getInstance**](InstancesApi.md#getinstance) | **GET** /instances/{id} | Get an instance |
+| [**getInstanceGpuSuggestion**](InstancesApi.md#getinstancegpusuggestion) | **GET** /instances/{id}/gpu-suggestion | Suggest a lower-priced GPU for an instance |
 | [**listInstances**](InstancesApi.md#listinstances) | **GET** /instances | List instances |
 | [**updateInstance**](InstancesApi.md#updateinstanceoperation) | **PATCH** /instances/{id} | Update an instance (rename only in v1) |
 
@@ -232,6 +233,80 @@ example().catch(console.error);
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | OK |  -  |
+| **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **0** | Error response (RFC 7807) |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## getInstanceGpuSuggestion
+
+> GpuSuggestion getInstanceGpuSuggestion(id)
+
+Suggest a lower-priced GPU for an instance
+
+Compares the highest GPU memory this instance has used (its &#x60;gpu_memory&#x60; peak, plus headroom) with the GPU models currently listed, and names the cheapest model that would have fit when the saving is worth a look. It never changes anything: it reports what the telemetry shows. Memory use can grow later, so treat it as a starting point.  &#x60;status&#x60; is &#x60;insufficient_data&#x60; until the instance has about an hour of telemetry, &#x60;no_cheaper_fit&#x60; when no cheaper listed model covers the peak, and &#x60;suggestion&#x60; when one does. Requires the &#x60;instances:read&#x60; scope. An instance owned by another organization returns 404. 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  InstancesApi,
+} from '@gpuai/sdk';
+import type { GetInstanceGpuSuggestionRequest } from '@gpuai/sdk';
+
+async function example() {
+  console.log("🚀 Testing @gpuai/sdk SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new InstancesApi(config);
+
+  const body = {
+    // string
+    id: id_example,
+  } satisfies GetInstanceGpuSuggestionRequest;
+
+  try {
+    const data = await api.getInstanceGpuSuggestion(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | `string` |  | [Defaults to `undefined`] |
+
+### Return type
+
+[**GpuSuggestion**](GpuSuggestion.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`, `application/problem+json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **404** | The instance does not exist or is not owned by the caller\&#39;s organization. |  -  |
 | **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **0** | Error response (RFC 7807) |  -  |
 

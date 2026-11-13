@@ -14,6 +14,7 @@ Name | Type
 `region` | string
 `tier` | string
 `pricePerHour` | number
+`gpuMemory` | [InstanceGpuMemory](InstanceGpuMemory.md)
 `connection` | [InstanceConnection](InstanceConnection.md)
 `diskGb` | number
 `image` | string
@@ -41,6 +42,7 @@ const example = {
   "region": null,
   "tier": null,
   "pricePerHour": null,
+  "gpuMemory": null,
   "connection": null,
   "diskGb": null,
   "image": null,
