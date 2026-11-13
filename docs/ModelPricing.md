@@ -9,12 +9,18 @@ Name | Type
 `currency` | string
 `inputPer1mTokensCents` | number
 `outputPer1mTokensCents` | number
+`cachedInputPer1mTokensMicrocents` | number
+`cachedInputPer1mTokensCents` | number
 `perImageCents` | number
 `perImageMicrocents` | number
 `perMpxlMicrocents` | number
 `perVideoMicrocents` | number
 `perVideoSecondCents` | number
 `perVideoSecondMicrocents` | number
+`period` | string
+`peakWindowsUtc` | [Array&lt;PeakWindow&gt;](PeakWindow.md)
+`peak` | [ModelRate](ModelRate.md)
+`offPeak` | [ModelRate](ModelRate.md)
 
 ## Example
 
@@ -26,12 +32,18 @@ const example = {
   "currency": null,
   "inputPer1mTokensCents": null,
   "outputPer1mTokensCents": null,
+  "cachedInputPer1mTokensMicrocents": null,
+  "cachedInputPer1mTokensCents": null,
   "perImageCents": null,
   "perImageMicrocents": null,
   "perMpxlMicrocents": null,
   "perVideoMicrocents": null,
   "perVideoSecondCents": null,
   "perVideoSecondMicrocents": null,
+  "period": null,
+  "peakWindowsUtc": null,
+  "peak": null,
+  "offPeak": null,
 } satisfies ModelPricing
 
 console.log(example)

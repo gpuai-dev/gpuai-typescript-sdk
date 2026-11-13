@@ -5,10 +5,14 @@ All URIs are relative to *https://api.gpu.ai/v1*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**createCryptoDeposit**](BillingApi.md#createcryptodepositoperation) | **POST** /billing/deposits/crypto | Create a stablecoin deposit |
+| [**downloadInvoicePdf**](BillingApi.md#downloadinvoicepdf) | **GET** /billing/invoices/{id}/pdf | Download an invoice PDF |
 | [**getBalance**](BillingApi.md#getbalance) | **GET** /billing/balance | Get the org credit balance |
+| [**getBillingDetails**](BillingApi.md#getbillingdetails) | **GET** /billing/details | Get billing details |
 | [**getDeposit**](BillingApi.md#getdeposit) | **GET** /billing/deposits/{id} | Get one stablecoin deposit |
 | [**getSpendingLimit**](BillingApi.md#getspendinglimit) | **GET** /billing/spending-limit | Get the org spending limit |
 | [**listDeposits**](BillingApi.md#listdeposits) | **GET** /billing/deposits | List stablecoin deposits |
+| [**listInvoices**](BillingApi.md#listinvoices) | **GET** /billing/invoices | List invoices |
+| [**updateBillingDetails**](BillingApi.md#updatebillingdetailsoperation) | **PATCH** /billing/details | Update billing details |
 | [**updateSpendingLimit**](BillingApi.md#updatespendinglimitoperation) | **PUT** /billing/spending-limit | Set the org spending limit |
 
 
@@ -90,6 +94,80 @@ example().catch(console.error);
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
+## downloadInvoicePdf
+
+> Blob downloadInvoicePdf(id)
+
+Download an invoice PDF
+
+Returns one invoice as a PDF, including the organization\&#39;s billing details and full Tax ID. Requires the &#x60;billing:read&#x60; scope. An invoice belonging to another organization returns the same 404 as one that does not exist. 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  BillingApi,
+} from '@gpuai/sdk';
+import type { DownloadInvoicePdfRequest } from '@gpuai/sdk';
+
+async function example() {
+  console.log("🚀 Testing @gpuai/sdk SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new BillingApi(config);
+
+  const body = {
+    // string | The invoice id.
+    id: id_example,
+  } satisfies DownloadInvoicePdfRequest;
+
+  try {
+    const data = await api.downloadInvoicePdf(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | `string` | The invoice id. | [Defaults to `undefined`] |
+
+### Return type
+
+**Blob**
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/pdf`, `application/problem+json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | The invoice PDF. |  -  |
+| **404** | Error response (RFC 7807) |  -  |
+| **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **0** | Error response (RFC 7807) |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
 ## getBalance
 
 > Balance getBalance()
@@ -134,6 +212,71 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**Balance**](Balance.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`, `application/problem+json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **0** | Error response (RFC 7807) |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## getBillingDetails
+
+> BillingDetails getBillingDetails()
+
+Get billing details
+
+Returns the company name, address and Tax ID printed on the organization\&#39;s invoices. Requires the &#x60;billing:read&#x60; scope. The Tax ID is stored encrypted and is only ever returned masked (&#x60;tax_id_masked&#x60;); the full value is printed on the organization\&#39;s own invoice PDFs and nowhere else. 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  BillingApi,
+} from '@gpuai/sdk';
+import type { GetBillingDetailsRequest } from '@gpuai/sdk';
+
+async function example() {
+  console.log("🚀 Testing @gpuai/sdk SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new BillingApi(config);
+
+  try {
+    const data = await api.getBillingDetails();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**BillingDetails**](BillingDetails.md)
 
 ### Authorization
 
@@ -356,6 +499,162 @@ This endpoint does not need any parameter.
 | **200** | OK |  -  |
 | **404** | Error response (RFC 7807) |  -  |
 | **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **0** | Error response (RFC 7807) |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## listInvoices
+
+> InvoiceList listInvoices(limit, cursor)
+
+List invoices
+
+Returns the organization\&#39;s invoices, newest first. Every payment (card purchase, auto-pay top up, stablecoin deposit) has one; promotional credit does not. Requires the &#x60;billing:read&#x60; scope. 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  BillingApi,
+} from '@gpuai/sdk';
+import type { ListInvoicesRequest } from '@gpuai/sdk';
+
+async function example() {
+  console.log("🚀 Testing @gpuai/sdk SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new BillingApi(config);
+
+  const body = {
+    // number (optional)
+    limit: 56,
+    // string | The `next_cursor` from the previous page. (optional)
+    cursor: cursor_example,
+  } satisfies ListInvoicesRequest;
+
+  try {
+    const data = await api.listInvoices(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **limit** | `number` |  | [Optional] [Defaults to `25`] |
+| **cursor** | `string` | The &#x60;next_cursor&#x60; from the previous page. | [Optional] [Defaults to `undefined`] |
+
+### Return type
+
+[**InvoiceList**](InvoiceList.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`, `application/problem+json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **400** | Error response (RFC 7807) |  -  |
+| **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **0** | Error response (RFC 7807) |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## updateBillingDetails
+
+> BillingDetails updateBillingDetails(updateBillingDetailsRequest, idempotencyKey)
+
+Update billing details
+
+Updates the billing details printed on invoices. Requires the &#x60;billing:write&#x60; scope and an org admin\&#39;s key. Omitted fields keep their value. &#x60;tax_id&#x60; replaces the stored Tax ID (and needs &#x60;tax_id_type&#x60; unless one is already stored); an empty &#x60;tax_id&#x60; removes it. Returns 503 &#x60;tax-id-unavailable&#x60; when this deployment cannot store a Tax ID. 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  BillingApi,
+} from '@gpuai/sdk';
+import type { UpdateBillingDetailsOperationRequest } from '@gpuai/sdk';
+
+async function example() {
+  console.log("🚀 Testing @gpuai/sdk SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new BillingApi(config);
+
+  const body = {
+    // UpdateBillingDetailsRequest
+    updateBillingDetailsRequest: ...,
+    // string (optional)
+    idempotencyKey: idempotencyKey_example,
+  } satisfies UpdateBillingDetailsOperationRequest;
+
+  try {
+    const data = await api.updateBillingDetails(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **updateBillingDetailsRequest** | [UpdateBillingDetailsRequest](UpdateBillingDetailsRequest.md) |  | |
+| **idempotencyKey** | `string` |  | [Optional] [Defaults to `undefined`] |
+
+### Return type
+
+[**BillingDetails**](BillingDetails.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **400** | Error response (RFC 7807) |  -  |
+| **403** | Error response (RFC 7807) |  -  |
+| **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **503** | Error response (RFC 7807) |  -  |
 | **0** | Error response (RFC 7807) |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)

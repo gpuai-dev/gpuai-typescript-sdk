@@ -1,4 +1,4 @@
-# @gpuai/sdk@0.3.18
+# @gpuai/sdk@0.4.0
 
 A TypeScript SDK client for the api.gpu.ai API.
 
@@ -62,10 +62,14 @@ All URIs are relative to *https://api.gpu.ai/v1*
 *AutolaunchApi* | [**getAutolaunchRule**](docs/AutolaunchApi.md#getautolaunchrule) | **GET** /autolaunch-rules/{id} | Get an auto-launch rule
 *AutolaunchApi* | [**listAutolaunchRules**](docs/AutolaunchApi.md#listautolaunchrules) | **GET** /autolaunch-rules | List auto-launch rules
 *BillingApi* | [**createCryptoDeposit**](docs/BillingApi.md#createcryptodepositoperation) | **POST** /billing/deposits/crypto | Create a stablecoin deposit
+*BillingApi* | [**downloadInvoicePdf**](docs/BillingApi.md#downloadinvoicepdf) | **GET** /billing/invoices/{id}/pdf | Download an invoice PDF
 *BillingApi* | [**getBalance**](docs/BillingApi.md#getbalance) | **GET** /billing/balance | Get the org credit balance
+*BillingApi* | [**getBillingDetails**](docs/BillingApi.md#getbillingdetails) | **GET** /billing/details | Get billing details
 *BillingApi* | [**getDeposit**](docs/BillingApi.md#getdeposit) | **GET** /billing/deposits/{id} | Get one stablecoin deposit
 *BillingApi* | [**getSpendingLimit**](docs/BillingApi.md#getspendinglimit) | **GET** /billing/spending-limit | Get the org spending limit
 *BillingApi* | [**listDeposits**](docs/BillingApi.md#listdeposits) | **GET** /billing/deposits | List stablecoin deposits
+*BillingApi* | [**listInvoices**](docs/BillingApi.md#listinvoices) | **GET** /billing/invoices | List invoices
+*BillingApi* | [**updateBillingDetails**](docs/BillingApi.md#updatebillingdetailsoperation) | **PATCH** /billing/details | Update billing details
 *BillingApi* | [**updateSpendingLimit**](docs/BillingApi.md#updatespendinglimitoperation) | **PUT** /billing/spending-limit | Set the org spending limit
 *CommunityApi* | [**delistCommunityMachine**](docs/CommunityApi.md#delistcommunitymachine) | **POST** /community/machines/{id}/delist | Delist a Community Cloud machine
 *CommunityApi* | [**enableCommunitySupplier**](docs/CommunityApi.md#enablecommunitysupplier) | **POST** /community/suppliers | Enable the Community Cloud supplier role
@@ -81,6 +85,17 @@ All URIs are relative to *https://api.gpu.ai/v1*
 *FineTuningApi* | [**listFineTuningJobEvents**](docs/FineTuningApi.md#listfinetuningjobevents) | **GET** /fine_tuning/jobs/{id}/events | List fine-tuning job events (OpenAI-compatible)
 *FineTuningApi* | [**listFineTuningJobs**](docs/FineTuningApi.md#listfinetuningjobs) | **GET** /fine_tuning/jobs | List fine-tuning jobs (OpenAI-compatible)
 *FineTuningApi* | [**retrieveFile**](docs/FineTuningApi.md#retrievefile) | **GET** /files/{id} | Retrieve a file (OpenAI-compatible)
+*FunctionsApi* | [**activateFunctionVersion**](docs/FunctionsApi.md#activatefunctionversion) | **POST** /functions/{id}/versions/{version_id}/activate | Confirm a version\&#39;s upload and make it current
+*FunctionsApi* | [**cancelFunctionRun**](docs/FunctionsApi.md#cancelfunctionrun) | **POST** /functions/{id}/runs/{run_id}/cancel | Cancel a run
+*FunctionsApi* | [**createFunction**](docs/FunctionsApi.md#createfunctionoperation) | **POST** /functions | Get or create a function by name
+*FunctionsApi* | [**createFunctionRun**](docs/FunctionsApi.md#createfunctionrunoperation) | **POST** /functions/{id}/runs | Call a function
+*FunctionsApi* | [**createFunctionVersion**](docs/FunctionsApi.md#createfunctionversionoperation) | **POST** /functions/{id}/versions | Register a version of a function
+*FunctionsApi* | [**deleteFunction**](docs/FunctionsApi.md#deletefunction) | **DELETE** /functions/{id} | Delete a function
+*FunctionsApi* | [**getFunction**](docs/FunctionsApi.md#getfunction) | **GET** /functions/{id} | Get a function
+*FunctionsApi* | [**getFunctionRun**](docs/FunctionsApi.md#getfunctionrun) | **GET** /functions/{id}/runs/{run_id} | Get a run
+*FunctionsApi* | [**getFunctionRunLogs**](docs/FunctionsApi.md#getfunctionrunlogs) | **GET** /functions/{id}/runs/{run_id}/logs | Read a run\&#39;s output
+*FunctionsApi* | [**listFunctionRuns**](docs/FunctionsApi.md#listfunctionruns) | **GET** /functions/{id}/runs | List a function\&#39;s runs
+*FunctionsApi* | [**listFunctions**](docs/FunctionsApi.md#listfunctions) | **GET** /functions | List functions
 *GpuTypesApi* | [**listGpuTypes**](docs/GpuTypesApi.md#listgputypes) | **GET** /gpu-types | List available GPU types (no auth required)
 *InferenceApi* | [**cancelVideo**](docs/InferenceApi.md#cancelvideo) | **POST** /videos/{id}/cancel | Cancel a video generation job
 *InferenceApi* | [**createChatCompletion**](docs/InferenceApi.md#createchatcompletion) | **POST** /chat/completions | Create a chat completion (OpenAI-compatible)
@@ -130,6 +145,7 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [AutolaunchRuleDisarm](docs/AutolaunchRuleDisarm.md)
 - [AutolaunchRulePage](docs/AutolaunchRulePage.md)
 - [Balance](docs/Balance.md)
+- [BillingDetails](docs/BillingDetails.md)
 - [ChatChoice](docs/ChatChoice.md)
 - [ChatCompletionRequest](docs/ChatCompletionRequest.md)
 - [ChatCompletionResponse](docs/ChatCompletionResponse.md)
@@ -143,6 +159,9 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [CreateFineTuningJobRequestGpuai](docs/CreateFineTuningJobRequestGpuai.md)
 - [CreateFineTuningJobRequestMethod](docs/CreateFineTuningJobRequestMethod.md)
 - [CreateFineTuningJobRequestMethodLora](docs/CreateFineTuningJobRequestMethodLora.md)
+- [CreateFunctionRequest](docs/CreateFunctionRequest.md)
+- [CreateFunctionRunRequest](docs/CreateFunctionRunRequest.md)
+- [CreateFunctionVersionRequest](docs/CreateFunctionVersionRequest.md)
 - [CreateInstanceRequest](docs/CreateInstanceRequest.md)
 - [CreateInstanceRequestPortsInner](docs/CreateInstanceRequestPortsInner.md)
 - [CreateRegistryCredentialRequest](docs/CreateRegistryCredentialRequest.md)
@@ -163,6 +182,16 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [FineTuningJobList](docs/FineTuningJobList.md)
 - [FineTuningJobMethod](docs/FineTuningJobMethod.md)
 - [FrameworkVersion](docs/FrameworkVersion.md)
+- [Function](docs/Function.md)
+- [FunctionList](docs/FunctionList.md)
+- [FunctionReplicaCounts](docs/FunctionReplicaCounts.md)
+- [FunctionRun](docs/FunctionRun.md)
+- [FunctionRunError](docs/FunctionRunError.md)
+- [FunctionRunList](docs/FunctionRunList.md)
+- [FunctionRunLogChunk](docs/FunctionRunLogChunk.md)
+- [FunctionRunLogs](docs/FunctionRunLogs.md)
+- [FunctionUpload](docs/FunctionUpload.md)
+- [FunctionVersion](docs/FunctionVersion.md)
 - [GPUType](docs/GPUType.md)
 - [GPUTypePage](docs/GPUTypePage.md)
 - [GetHealth200Response](docs/GetHealth200Response.md)
@@ -174,6 +203,8 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [Instance](docs/Instance.md)
 - [InstanceConnection](docs/InstanceConnection.md)
 - [InstancePage](docs/InstancePage.md)
+- [Invoice](docs/Invoice.md)
+- [InvoiceList](docs/InvoiceList.md)
 - [ListCommunityMachines200Response](docs/ListCommunityMachines200Response.md)
 - [ListDeposits200Response](docs/ListDeposits200Response.md)
 - [ListRegistryCredentials200Response](docs/ListRegistryCredentials200Response.md)
@@ -183,11 +214,13 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [ModelList](docs/ModelList.md)
 - [ModelParametersInner](docs/ModelParametersInner.md)
 - [ModelPricing](docs/ModelPricing.md)
+- [ModelRate](docs/ModelRate.md)
 - [OpenAIErrorEnvelope](docs/OpenAIErrorEnvelope.md)
 - [OpenAIErrorEnvelopeError](docs/OpenAIErrorEnvelopeError.md)
 - [Operation](docs/Operation.md)
 - [OperationError](docs/OperationError.md)
 - [OperationResult](docs/OperationResult.md)
+- [PeakWindow](docs/PeakWindow.md)
 - [Pricing](docs/Pricing.md)
 - [PricingPage](docs/PricingPage.md)
 - [Problem](docs/Problem.md)
@@ -202,6 +235,7 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [TemplateEnvInner](docs/TemplateEnvInner.md)
 - [TemplateList](docs/TemplateList.md)
 - [TemplatePortsInner](docs/TemplatePortsInner.md)
+- [UpdateBillingDetailsRequest](docs/UpdateBillingDetailsRequest.md)
 - [UpdateInstanceRequest](docs/UpdateInstanceRequest.md)
 - [UpdateSpendingLimitRequest](docs/UpdateSpendingLimitRequest.md)
 - [Usage](docs/Usage.md)
@@ -235,7 +269,7 @@ and is automatically generated by the
 [OpenAPI Generator](https://openapi-generator.tech) project:
 
 - API version: `1.0.0`
-- Package version: `0.3.18`
+- Package version: `0.4.0`
 - Generator version: `7.24.0`
 - Build package: `org.openapitools.codegen.languages.TypeScriptFetchClientCodegen`
 

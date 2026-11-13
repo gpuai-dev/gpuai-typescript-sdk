@@ -13,6 +13,21 @@
  */
 
 import { mapValues } from '../runtime';
+import type { ModelRate } from './ModelRate';
+import {
+    ModelRateFromJSON,
+    ModelRateFromJSONTyped,
+    ModelRateToJSON,
+    ModelRateToJSONTyped,
+} from './ModelRate';
+import type { PeakWindow } from './PeakWindow';
+import {
+    PeakWindowFromJSON,
+    PeakWindowFromJSONTyped,
+    PeakWindowToJSON,
+    PeakWindowToJSONTyped,
+} from './PeakWindow';
+
 /**
  * 
  * @export
@@ -37,6 +52,18 @@ export interface ModelPricing {
      * @memberof ModelPricing
      */
     outputPer1mTokensCents?: number;
+    /**
+     * Exact per-1M-token rate in micro-cents (1e-6 cent) for the cache-HIT part of a chat prompt (usage.prompt_tokens_details.cached_tokens). Present only on models with a published cached-input rate; absent means no discount — every prompt token bills at input_per_1m_tokens_cents. Treat this field as the presence signal: cached rates are routinely sub-cent, so the rounded cents field below is often omitted.
+     * @type {number}
+     * @memberof ModelPricing
+     */
+    cachedInputPer1mTokensMicrocents?: number;
+    /**
+     * cached_input_per_1m_tokens_microcents rounded to whole cents; omitted when the exact rate rounds below half a cent.
+     * @type {number}
+     * @memberof ModelPricing
+     */
+    cachedInputPer1mTokensCents?: number;
     /**
      * 
      * @type {number}
@@ -73,7 +100,42 @@ export interface ModelPricing {
      * @memberof ModelPricing
      */
     perVideoSecondMicrocents?: number;
+    /**
+     * Present only on a model priced by time of day. Which side of the peak schedule the instant this response was rendered falls on; the flat rate fields above are the rates in effect at that instant. A request is billed at the rate in effect when it ARRIVES (UTC), so a caller planning a call for later should price it from `peak` / `off_peak` and `peak_windows_utc`.
+     * @type {ModelPricingPeriodEnum}
+     * @memberof ModelPricing
+     */
+    period?: ModelPricingPeriodEnum;
+    /**
+     * The daily UTC ranges during which the `peak` rates apply, start inclusive and end exclusive ("24:00" is a valid end; a range whose end sorts before its start wraps midnight). Present only on a model priced by time of day.
+     * @type {Array<PeakWindow>}
+     * @memberof ModelPricing
+     */
+    peakWindowsUtc?: Array<PeakWindow>;
+    /**
+     * 
+     * @type {ModelRate}
+     * @memberof ModelPricing
+     */
+    peak?: ModelRate;
+    /**
+     * 
+     * @type {ModelRate}
+     * @memberof ModelPricing
+     */
+    offPeak?: ModelRate;
 }
+
+
+/**
+ * @export
+ */
+export const ModelPricingPeriodEnum = {
+    Peak: 'peak',
+    OffPeak: 'off_peak'
+} as const;
+export type ModelPricingPeriodEnum = typeof ModelPricingPeriodEnum[keyof typeof ModelPricingPeriodEnum];
+
 
 /**
  * Check if a given object implements the ModelPricing interface.
@@ -95,12 +157,18 @@ export function ModelPricingFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'currency': json['currency'] == null ? undefined : json['currency'],
         'inputPer1mTokensCents': json['input_per_1m_tokens_cents'] == null ? undefined : json['input_per_1m_tokens_cents'],
         'outputPer1mTokensCents': json['output_per_1m_tokens_cents'] == null ? undefined : json['output_per_1m_tokens_cents'],
+        'cachedInputPer1mTokensMicrocents': json['cached_input_per_1m_tokens_microcents'] == null ? undefined : json['cached_input_per_1m_tokens_microcents'],
+        'cachedInputPer1mTokensCents': json['cached_input_per_1m_tokens_cents'] == null ? undefined : json['cached_input_per_1m_tokens_cents'],
         'perImageCents': json['per_image_cents'] == null ? undefined : json['per_image_cents'],
         'perImageMicrocents': json['per_image_microcents'] == null ? undefined : json['per_image_microcents'],
         'perMpxlMicrocents': json['per_mpxl_microcents'] == null ? undefined : json['per_mpxl_microcents'],
         'perVideoMicrocents': json['per_video_microcents'] == null ? undefined : json['per_video_microcents'],
         'perVideoSecondCents': json['per_video_second_cents'] == null ? undefined : json['per_video_second_cents'],
         'perVideoSecondMicrocents': json['per_video_second_microcents'] == null ? undefined : json['per_video_second_microcents'],
+        'period': json['period'] == null ? undefined : json['period'],
+        'peakWindowsUtc': json['peak_windows_utc'] == null ? undefined : ((json['peak_windows_utc'] as Array<any>).map(PeakWindowFromJSON)),
+        'peak': json['peak'] == null ? undefined : ModelRateFromJSON(json['peak']),
+        'offPeak': json['off_peak'] == null ? undefined : ModelRateFromJSON(json['off_peak']),
     };
 }
 
@@ -118,12 +186,18 @@ export function ModelPricingToJSONTyped(value?: ModelPricing | null, ignoreDiscr
         'currency': value['currency'],
         'input_per_1m_tokens_cents': value['inputPer1mTokensCents'],
         'output_per_1m_tokens_cents': value['outputPer1mTokensCents'],
+        'cached_input_per_1m_tokens_microcents': value['cachedInputPer1mTokensMicrocents'],
+        'cached_input_per_1m_tokens_cents': value['cachedInputPer1mTokensCents'],
         'per_image_cents': value['perImageCents'],
         'per_image_microcents': value['perImageMicrocents'],
         'per_mpxl_microcents': value['perMpxlMicrocents'],
         'per_video_microcents': value['perVideoMicrocents'],
         'per_video_second_cents': value['perVideoSecondCents'],
         'per_video_second_microcents': value['perVideoSecondMicrocents'],
+        'period': value['period'],
+        'peak_windows_utc': value['peakWindowsUtc'] == null ? undefined : ((value['peakWindowsUtc'] as Array<any>).map(PeakWindowToJSON)),
+        'peak': ModelRateToJSON(value['peak']),
+        'off_peak': ModelRateToJSON(value['offPeak']),
     };
 }
 

@@ -5,6 +5,7 @@ export * from './BillingApi';
 export * from './CommunityApi';
 export * from './EnvironmentsApi';
 export * from './FineTuningApi';
+export * from './FunctionsApi';
 export * from './GpuTypesApi';
 export * from './InferenceApi';
 export * from './InstancesApi';

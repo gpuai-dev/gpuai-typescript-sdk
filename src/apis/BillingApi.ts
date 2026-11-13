@@ -19,6 +19,11 @@ import {
     BalanceToJSON,
 } from '../models/Balance';
 import {
+    type BillingDetails,
+    BillingDetailsFromJSON,
+    BillingDetailsToJSON,
+} from '../models/BillingDetails';
+import {
     type CreateCryptoDepositRequest,
     CreateCryptoDepositRequestFromJSON,
     CreateCryptoDepositRequestToJSON,
@@ -28,6 +33,11 @@ import {
     CryptoDepositFromJSON,
     CryptoDepositToJSON,
 } from '../models/CryptoDeposit';
+import {
+    type InvoiceList,
+    InvoiceListFromJSON,
+    InvoiceListToJSON,
+} from '../models/InvoiceList';
 import {
     type ListDeposits200Response,
     ListDeposits200ResponseFromJSON,
@@ -44,6 +54,11 @@ import {
     SpendingLimitToJSON,
 } from '../models/SpendingLimit';
 import {
+    type UpdateBillingDetailsRequest,
+    UpdateBillingDetailsRequestFromJSON,
+    UpdateBillingDetailsRequestToJSON,
+} from '../models/UpdateBillingDetailsRequest';
+import {
     type UpdateSpendingLimitRequest,
     UpdateSpendingLimitRequestFromJSON,
     UpdateSpendingLimitRequestToJSON,
@@ -53,8 +68,22 @@ export interface CreateCryptoDepositOperationRequest {
     createCryptoDepositRequest: CreateCryptoDepositRequest;
 }
 
+export interface DownloadInvoicePdfRequest {
+    id: string;
+}
+
 export interface GetDepositRequest {
     id: string;
+}
+
+export interface ListInvoicesRequest {
+    limit?: number;
+    cursor?: string;
+}
+
+export interface UpdateBillingDetailsOperationRequest {
+    updateBillingDetailsRequest: UpdateBillingDetailsRequest;
+    idempotencyKey?: string;
 }
 
 export interface UpdateSpendingLimitOperationRequest {
@@ -124,6 +153,61 @@ export class BillingApi extends runtime.BaseAPI {
     }
 
     /**
+     * Creates request options for downloadInvoicePdf without sending the request
+     */
+    async downloadInvoicePdfRequestOpts(requestParameters: DownloadInvoicePdfRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling downloadInvoicePdf().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/billing/invoices/{id}/pdf`;
+        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns one invoice as a PDF, including the organization\'s billing details and full Tax ID. Requires the `billing:read` scope. An invoice belonging to another organization returns the same 404 as one that does not exist. 
+     * Download an invoice PDF
+     */
+    async downloadInvoicePdfRaw(requestParameters: DownloadInvoicePdfRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Blob>> {
+        const requestOptions = await this.downloadInvoicePdfRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.BlobApiResponse(response);
+    }
+
+    /**
+     * Returns one invoice as a PDF, including the organization\'s billing details and full Tax ID. Requires the `billing:read` scope. An invoice belonging to another organization returns the same 404 as one that does not exist. 
+     * Download an invoice PDF
+     */
+    async downloadInvoicePdf(requestParameters: DownloadInvoicePdfRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Blob> {
+        const response = await this.downloadInvoicePdfRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for getBalance without sending the request
      */
     async getBalanceRequestOpts(): Promise<runtime.RequestOpts> {
@@ -167,6 +251,53 @@ export class BillingApi extends runtime.BaseAPI {
      */
     async getBalance(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Balance> {
         const response = await this.getBalanceRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getBillingDetails without sending the request
+     */
+    async getBillingDetailsRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/billing/details`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns the company name, address and Tax ID printed on the organization\'s invoices. Requires the `billing:read` scope. The Tax ID is stored encrypted and is only ever returned masked (`tax_id_masked`); the full value is printed on the organization\'s own invoice PDFs and nowhere else. 
+     * Get billing details
+     */
+    async getBillingDetailsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BillingDetails>> {
+        const requestOptions = await this.getBillingDetailsRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BillingDetailsFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns the company name, address and Tax ID printed on the organization\'s invoices. Requires the `billing:read` scope. The Tax ID is stored encrypted and is only ever returned masked (`tax_id_masked`); the full value is printed on the organization\'s own invoice PDFs and nowhere else. 
+     * Get billing details
+     */
+    async getBillingDetails(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BillingDetails> {
+        const response = await this.getBillingDetailsRaw(initOverrides);
         return await response.value();
     }
 
@@ -316,6 +447,122 @@ export class BillingApi extends runtime.BaseAPI {
      */
     async listDeposits(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListDeposits200Response> {
         const response = await this.listDepositsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listInvoices without sending the request
+     */
+    async listInvoicesRequestOpts(requestParameters: ListInvoicesRequest): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['cursor'] != null) {
+            queryParameters['cursor'] = requestParameters['cursor'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/billing/invoices`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns the organization\'s invoices, newest first. Every payment (card purchase, auto-pay top up, stablecoin deposit) has one; promotional credit does not. Requires the `billing:read` scope. 
+     * List invoices
+     */
+    async listInvoicesRaw(requestParameters: ListInvoicesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InvoiceList>> {
+        const requestOptions = await this.listInvoicesRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InvoiceListFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns the organization\'s invoices, newest first. Every payment (card purchase, auto-pay top up, stablecoin deposit) has one; promotional credit does not. Requires the `billing:read` scope. 
+     * List invoices
+     */
+    async listInvoices(requestParameters: ListInvoicesRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InvoiceList> {
+        const response = await this.listInvoicesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for updateBillingDetails without sending the request
+     */
+    async updateBillingDetailsRequestOpts(requestParameters: UpdateBillingDetailsOperationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['updateBillingDetailsRequest'] == null) {
+            throw new runtime.RequiredError(
+                'updateBillingDetailsRequest',
+                'Required parameter "updateBillingDetailsRequest" was null or undefined when calling updateBillingDetails().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/billing/details`;
+
+        return {
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UpdateBillingDetailsRequestToJSON(requestParameters['updateBillingDetailsRequest']),
+        };
+    }
+
+    /**
+     * Updates the billing details printed on invoices. Requires the `billing:write` scope and an org admin\'s key. Omitted fields keep their value. `tax_id` replaces the stored Tax ID (and needs `tax_id_type` unless one is already stored); an empty `tax_id` removes it. Returns 503 `tax-id-unavailable` when this deployment cannot store a Tax ID. 
+     * Update billing details
+     */
+    async updateBillingDetailsRaw(requestParameters: UpdateBillingDetailsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BillingDetails>> {
+        const requestOptions = await this.updateBillingDetailsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BillingDetailsFromJSON(jsonValue));
+    }
+
+    /**
+     * Updates the billing details printed on invoices. Requires the `billing:write` scope and an org admin\'s key. Omitted fields keep their value. `tax_id` replaces the stored Tax ID (and needs `tax_id_type` unless one is already stored); an empty `tax_id` removes it. Returns 503 `tax-id-unavailable` when this deployment cannot store a Tax ID. 
+     * Update billing details
+     */
+    async updateBillingDetails(requestParameters: UpdateBillingDetailsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BillingDetails> {
+        const response = await this.updateBillingDetailsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

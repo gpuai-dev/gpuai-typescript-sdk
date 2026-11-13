@@ -108,7 +108,8 @@ export interface AutolaunchRule {
      */
     lastFailureReason: string | null;
     /**
-     * The instance this rule launched, once it has fired.
+     * The instance this rule launched, once it has fired — an instance id of the form "gpu-" + 8 lowercase hex, the same string /v1/instances returns. Not a uuid, and deliberately carries no format or pattern: no other instance-id field in this document constrains its shape, and a generated client-side assertion on an id grammar turns a server-side widening into a client-side outage.
+     * 
      * @type {string}
      * @memberof AutolaunchRule
      */
