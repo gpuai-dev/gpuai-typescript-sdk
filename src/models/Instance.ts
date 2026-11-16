@@ -154,6 +154,12 @@ export interface Instance {
      * @memberof Instance
      */
     unreachableSince?: Date;
+    /**
+     * How far a launch that is not ready yet has got. machine_requested means the machine was requested and no image download has been reported yet; pulling_image means the image is downloading or unpacking; setting_up means the container is up and the platform is finishing SSH and the GPU check. Present only while status is allocating or starting and the platform is following the boot; absent otherwise. Lets a client with a fixed timeout tell a launch that is still moving from one that is stuck.
+     * @type {InstanceBootPhaseEnum}
+     * @memberof Instance
+     */
+    bootPhase?: InstanceBootPhaseEnum;
 }
 
 
@@ -180,6 +186,16 @@ export const InstanceTierEnum = {
     OnDemand: 'on_demand'
 } as const;
 export type InstanceTierEnum = typeof InstanceTierEnum[keyof typeof InstanceTierEnum];
+
+/**
+ * @export
+ */
+export const InstanceBootPhaseEnum = {
+    MachineRequested: 'machine_requested',
+    PullingImage: 'pulling_image',
+    SettingUp: 'setting_up'
+} as const;
+export type InstanceBootPhaseEnum = typeof InstanceBootPhaseEnum[keyof typeof InstanceBootPhaseEnum];
 
 
 /**
@@ -227,6 +243,7 @@ export function InstanceFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'terminatedAt': json['terminated_at'] == null ? undefined : (new Date(json['terminated_at'])),
         'lastReachableAt': json['last_reachable_at'] == null ? undefined : (new Date(json['last_reachable_at'])),
         'unreachableSince': json['unreachable_since'] == null ? undefined : (new Date(json['unreachable_since'])),
+        'bootPhase': json['boot_phase'] == null ? undefined : json['boot_phase'],
     };
 }
 
@@ -261,6 +278,7 @@ export function InstanceToJSONTyped(value?: Instance | null, ignoreDiscriminator
         'terminated_at': value['terminatedAt'] == null ? value['terminatedAt'] : value['terminatedAt'].toISOString(),
         'last_reachable_at': value['lastReachableAt'] == null ? value['lastReachableAt'] : value['lastReachableAt'].toISOString(),
         'unreachable_since': value['unreachableSince'] == null ? value['unreachableSince'] : value['unreachableSince'].toISOString(),
+        'boot_phase': value['bootPhase'],
     };
 }
 
