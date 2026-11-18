@@ -103,6 +103,12 @@ export interface CreateFunctionVersionRequest {
      * @memberof CreateFunctionVersionRequest
      */
     maxConcurrency?: number;
+    /**
+     * Names of organization secrets (POST /secrets) each run receives as environment variables of the same names, resolved per call so a rotated value reaches the next call. Values are never in a response or a log. Returns 422 `validation_failed` when a name does not exist or secrets are not enabled on this deployment.
+     * @type {Array<string>}
+     * @memberof CreateFunctionVersionRequest
+     */
+    secrets?: Array<string>;
 }
 
 /**
@@ -142,6 +148,7 @@ export function CreateFunctionVersionRequestFromJSONTyped(json: any, ignoreDiscr
         'timeout': json['timeout'],
         'idleTimeout': json['idle_timeout'] == null ? undefined : json['idle_timeout'],
         'maxConcurrency': json['max_concurrency'] == null ? undefined : json['max_concurrency'],
+        'secrets': json['secrets'] == null ? undefined : json['secrets'],
     };
 }
 
@@ -170,6 +177,7 @@ export function CreateFunctionVersionRequestToJSONTyped(value?: CreateFunctionVe
         'timeout': value['timeout'],
         'idle_timeout': value['idleTimeout'],
         'max_concurrency': value['maxConcurrency'],
+        'secrets': value['secrets'],
     };
 }
 

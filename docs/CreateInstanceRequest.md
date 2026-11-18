@@ -25,6 +25,8 @@ Name | Type
 `entrypoint` | Array&lt;string&gt;
 `cmd` | Array&lt;string&gt;
 `ports` | [Array&lt;CreateInstanceRequestPortsInner&gt;](CreateInstanceRequestPortsInner.md)
+`dedicatedIp` | [DedicatedIPRequest](DedicatedIPRequest.md)
+`secrets` | Array&lt;string&gt;
 
 ## Example
 
@@ -52,6 +54,8 @@ const example = {
   "entrypoint": null,
   "cmd": null,
   "ports": null,
+  "dedicatedIp": null,
+  "secrets": null,
 } satisfies CreateInstanceRequest
 
 console.log(example)

@@ -89,6 +89,18 @@ export interface Model {
      */
     supportedParameters?: Array<string>;
     /**
+     * Chat models only. True when POST /v1/chat/completions accepts tools / tool_choice / parallel_tool_calls for this model and tier.
+     * @type {boolean}
+     * @memberof Model
+     */
+    supportsTools?: boolean;
+    /**
+     * Chat models only. True when POST /v1/chat/completions accepts response_format json_object / json_schema for this model and tier.
+     * @type {boolean}
+     * @memberof Model
+     */
+    supportsStructuredOutputs?: boolean;
+    /**
      * Typed parameter descriptors for media (image/video) models — name, type, enum/bounds/default. Playgrounds render input forms from these.
      * @type {Array<ModelParametersInner>}
      * @memberof Model
@@ -191,6 +203,8 @@ export function ModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Mod
         'category': json['category'] == null ? undefined : json['category'],
         'contextLength': json['context_length'] == null ? undefined : json['context_length'],
         'supportedParameters': json['supported_parameters'] == null ? undefined : json['supported_parameters'],
+        'supportsTools': json['supports_tools'] == null ? undefined : json['supports_tools'],
+        'supportsStructuredOutputs': json['supports_structured_outputs'] == null ? undefined : json['supports_structured_outputs'],
         'parameters': json['parameters'] == null ? undefined : ((json['parameters'] as Array<any>).map(ModelParametersInnerFromJSON)),
         'pricing': ModelPricingFromJSON(json['pricing']),
         'aliases': json['aliases'] == null ? undefined : json['aliases'],
@@ -220,6 +234,8 @@ export function ModelToJSONTyped(value?: Model | null, ignoreDiscriminator: bool
         'category': value['category'],
         'context_length': value['contextLength'],
         'supported_parameters': value['supportedParameters'],
+        'supports_tools': value['supportsTools'],
+        'supports_structured_outputs': value['supportsStructuredOutputs'],
         'parameters': value['parameters'] == null ? undefined : ((value['parameters'] as Array<any>).map(ModelParametersInnerToJSON)),
         'pricing': ModelPricingToJSON(value['pricing']),
         'aliases': value['aliases'],

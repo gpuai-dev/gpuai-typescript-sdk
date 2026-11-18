@@ -124,6 +124,12 @@ export interface FunctionVersion {
      */
     maxConcurrency: number;
     /**
+     * Names of the organization secrets each run receives. Empty when none.
+     * @type {Array<string>}
+     * @memberof FunctionVersion
+     */
+    secrets: Array<string>;
+    /**
      * 
      * @type {Date}
      * @memberof FunctionVersion
@@ -159,6 +165,7 @@ export function instanceOfFunctionVersion(value: object): value is FunctionVersi
     if (!('timeout' in value) || value['timeout'] === undefined) return false;
     if ((!('idleTimeout' in (value as Record<string, any>)) && !('idle_timeout' in (value as Record<string, any>))) || ((value as Record<string, any>)['idleTimeout'] === undefined && (value as Record<string, any>)['idle_timeout'] === undefined)) return false;
     if ((!('maxConcurrency' in (value as Record<string, any>)) && !('max_concurrency' in (value as Record<string, any>))) || ((value as Record<string, any>)['maxConcurrency'] === undefined && (value as Record<string, any>)['max_concurrency'] === undefined)) return false;
+    if (!('secrets' in value) || value['secrets'] === undefined) return false;
     if ((!('createdAt' in (value as Record<string, any>)) && !('created_at' in (value as Record<string, any>))) || ((value as Record<string, any>)['createdAt'] === undefined && (value as Record<string, any>)['created_at'] === undefined)) return false;
     return true;
 }
@@ -189,6 +196,7 @@ export function FunctionVersionFromJSONTyped(json: any, ignoreDiscriminator: boo
         'timeout': json['timeout'],
         'idleTimeout': json['idle_timeout'],
         'maxConcurrency': json['max_concurrency'],
+        'secrets': json['secrets'],
         'createdAt': (new Date(json['created_at'])),
     };
 }
@@ -220,6 +228,7 @@ export function FunctionVersionToJSONTyped(value?: FunctionVersion | null, ignor
         'timeout': value['timeout'],
         'idle_timeout': value['idleTimeout'],
         'max_concurrency': value['maxConcurrency'],
+        'secrets': value['secrets'],
         'created_at': value['createdAt'].toISOString(),
     };
 }

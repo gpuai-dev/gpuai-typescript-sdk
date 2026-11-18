@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { ChatToolCall } from './ChatToolCall';
+import {
+    ChatToolCallFromJSON,
+    ChatToolCallFromJSONTyped,
+    ChatToolCallToJSON,
+    ChatToolCallToJSONTyped,
+} from './ChatToolCall';
+
 /**
  * 
  * @export
@@ -26,11 +34,29 @@ export interface ChatMessage {
      */
     role: ChatMessageRoleEnum;
     /**
+     * Message text. null on an assistant message that only calls tools. Requests may also send an array of content parts, passed through unchanged.
+     * @type {string}
+     * @memberof ChatMessage
+     */
+    content?: string | null;
+    /**
      * 
      * @type {string}
      * @memberof ChatMessage
      */
-    content: string;
+    name?: string;
+    /**
+     * Tool calls made by the assistant (assistant messages only).
+     * @type {Array<ChatToolCall>}
+     * @memberof ChatMessage
+     */
+    toolCalls?: Array<ChatToolCall>;
+    /**
+     * The tool call this message answers (required on role "tool").
+     * @type {string}
+     * @memberof ChatMessage
+     */
+    toolCallId?: string;
 }
 
 
@@ -40,7 +66,8 @@ export interface ChatMessage {
 export const ChatMessageRoleEnum = {
     System: 'system',
     User: 'user',
-    Assistant: 'assistant'
+    Assistant: 'assistant',
+    Tool: 'tool'
 } as const;
 export type ChatMessageRoleEnum = typeof ChatMessageRoleEnum[keyof typeof ChatMessageRoleEnum];
 
@@ -50,7 +77,6 @@ export type ChatMessageRoleEnum = typeof ChatMessageRoleEnum[keyof typeof ChatMe
  */
 export function instanceOfChatMessage(value: object): value is ChatMessage {
     if (!('role' in value) || value['role'] === undefined) return false;
-    if (!('content' in value) || value['content'] === undefined) return false;
     return true;
 }
 
@@ -65,7 +91,10 @@ export function ChatMessageFromJSONTyped(json: any, ignoreDiscriminator: boolean
     return {
         
         'role': json['role'],
-        'content': json['content'],
+        'content': json['content'] === undefined ? undefined : json['content'] === null ? null : json['content'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'toolCalls': json['tool_calls'] == null ? undefined : ((json['tool_calls'] as Array<any>).map(ChatToolCallFromJSON)),
+        'toolCallId': json['tool_call_id'] == null ? undefined : json['tool_call_id'],
     };
 }
 
@@ -82,6 +111,9 @@ export function ChatMessageToJSONTyped(value?: ChatMessage | null, ignoreDiscrim
         
         'role': value['role'],
         'content': value['content'],
+        'name': value['name'],
+        'tool_calls': value['toolCalls'] == null ? undefined : ((value['toolCalls'] as Array<any>).map(ChatToolCallToJSON)),
+        'tool_call_id': value['toolCallId'],
     };
 }
 

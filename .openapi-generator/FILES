@@ -11,8 +11,17 @@ docs/BillingApi.md
 docs/BillingDetails.md
 docs/ChatChoice.md
 docs/ChatCompletionRequest.md
+docs/ChatCompletionRequestToolChoice.md
 docs/ChatCompletionResponse.md
+docs/ChatJSONSchemaFormat.md
 docs/ChatMessage.md
+docs/ChatNamedToolChoice.md
+docs/ChatNamedToolChoiceFunction.md
+docs/ChatResponseFormat.md
+docs/ChatTool.md
+docs/ChatToolCall.md
+docs/ChatToolCallFunction.md
+docs/ChatToolFunction.md
 docs/CommunityApi.md
 docs/CommunityMachine.md
 docs/CommunityMachineDelistResult.md
@@ -32,6 +41,7 @@ docs/CreateRegistryCredentialRequest.md
 docs/CreateSshKeyRequest.md
 docs/CreateWebhookEndpointRequest.md
 docs/CryptoDeposit.md
+docs/DedicatedIPRequest.md
 docs/Embedding.md
 docs/EmbeddingsRequest.md
 docs/EmbeddingsRequestInput.md
@@ -74,6 +84,7 @@ docs/IncludeItem.md
 docs/InferenceApi.md
 docs/Instance.md
 docs/InstanceConnection.md
+docs/InstanceDedicatedIP.md
 docs/InstanceGpuMemory.md
 docs/InstancePage.md
 docs/InstancesApi.md
@@ -165,8 +176,17 @@ src/models/Balance.ts
 src/models/BillingDetails.ts
 src/models/ChatChoice.ts
 src/models/ChatCompletionRequest.ts
+src/models/ChatCompletionRequestToolChoice.ts
 src/models/ChatCompletionResponse.ts
+src/models/ChatJSONSchemaFormat.ts
 src/models/ChatMessage.ts
+src/models/ChatNamedToolChoice.ts
+src/models/ChatNamedToolChoiceFunction.ts
+src/models/ChatResponseFormat.ts
+src/models/ChatTool.ts
+src/models/ChatToolCall.ts
+src/models/ChatToolCallFunction.ts
+src/models/ChatToolFunction.ts
 src/models/CommunityMachine.ts
 src/models/CommunityMachineDelistResult.ts
 src/models/CommunityMachineRegistration.ts
@@ -185,6 +205,7 @@ src/models/CreateRegistryCredentialRequest.ts
 src/models/CreateSshKeyRequest.ts
 src/models/CreateWebhookEndpointRequest.ts
 src/models/CryptoDeposit.ts
+src/models/DedicatedIPRequest.ts
 src/models/Embedding.ts
 src/models/EmbeddingsRequest.ts
 src/models/EmbeddingsRequestInput.ts
@@ -222,6 +243,7 @@ src/models/ImagesResponseUsage.ts
 src/models/IncludeItem.ts
 src/models/Instance.ts
 src/models/InstanceConnection.ts
+src/models/InstanceDedicatedIP.ts
 src/models/InstanceGpuMemory.ts
 src/models/InstancePage.ts
 src/models/Invoice.ts

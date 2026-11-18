@@ -8,6 +8,9 @@ Name | Type
 ------------ | -------------
 `role` | string
 `content` | string
+`name` | string
+`toolCalls` | [Array&lt;ChatToolCall&gt;](ChatToolCall.md)
+`toolCallId` | string
 
 ## Example
 
@@ -18,6 +21,9 @@ import type { ChatMessage } from '@gpuai/sdk'
 const example = {
   "role": null,
   "content": null,
+  "name": null,
+  "toolCalls": null,
+  "toolCallId": null,
 } satisfies ChatMessage
 
 console.log(example)

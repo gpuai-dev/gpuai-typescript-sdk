@@ -20,6 +20,13 @@ import {
     CreateInstanceRequestPortsInnerToJSON,
     CreateInstanceRequestPortsInnerToJSONTyped,
 } from './CreateInstanceRequestPortsInner';
+import type { DedicatedIPRequest } from './DedicatedIPRequest';
+import {
+    DedicatedIPRequestFromJSON,
+    DedicatedIPRequestFromJSONTyped,
+    DedicatedIPRequestToJSON,
+    DedicatedIPRequestToJSONTyped,
+} from './DedicatedIPRequest';
 
 /**
  * 
@@ -141,6 +148,18 @@ export interface CreateInstanceRequest {
      * @memberof CreateInstanceRequest
      */
     ports?: Array<CreateInstanceRequestPortsInner>;
+    /**
+     * Attach a dedicated public IPv4 address owned by GPU.ai. Its inbound TCP ports (80 and 443 unless `ports` says otherwise) forward, raw and without TLS termination, to the same ports on the instance's loopback, so your own certificates work. Billed hourly while attached plus per GB of transfer in both directions (see GET /dedicated-ip). on_demand tier only (422 `validation_failed` otherwise). Returns 409 `dedicated_ip_limit` when the organization already holds its limit, 503 `dedicated_ip_unavailable` when no address is free, 422 `validation_failed` for ports outside the allowed set, and 400 `validation_failed` on deployments where the add-on is not enabled. A launch whose address cannot be attached fails its operation with `dedicated_ip_unavailable`. The address is released when the instance terminates or fails.
+     * @type {DedicatedIPRequest}
+     * @memberof CreateInstanceRequest
+     */
+    dedicatedIp?: DedicatedIPRequest;
+    /**
+     * Names of organization secrets (POST /secrets) to deliver to the machine at boot as environment variables of the same names. Values are never in a response or a log. Returns 422 `validation_failed` when a name does not exist or secrets are not enabled on this deployment.
+     * @type {Array<string>}
+     * @memberof CreateInstanceRequest
+     */
+    secrets?: Array<string>;
 }
 
 
@@ -193,6 +212,8 @@ export function CreateInstanceRequestFromJSONTyped(json: any, ignoreDiscriminato
         'entrypoint': json['entrypoint'] == null ? undefined : json['entrypoint'],
         'cmd': json['cmd'] == null ? undefined : json['cmd'],
         'ports': json['ports'] == null ? undefined : ((json['ports'] as Array<any>).map(CreateInstanceRequestPortsInnerFromJSON)),
+        'dedicatedIp': json['dedicated_ip'] == null ? undefined : DedicatedIPRequestFromJSON(json['dedicated_ip']),
+        'secrets': json['secrets'] == null ? undefined : json['secrets'],
     };
 }
 
@@ -226,6 +247,8 @@ export function CreateInstanceRequestToJSONTyped(value?: CreateInstanceRequest |
         'entrypoint': value['entrypoint'],
         'cmd': value['cmd'],
         'ports': value['ports'] == null ? undefined : ((value['ports'] as Array<any>).map(CreateInstanceRequestPortsInnerToJSON)),
+        'dedicated_ip': DedicatedIPRequestToJSON(value['dedicatedIp']),
+        'secrets': value['secrets'],
     };
 }
 

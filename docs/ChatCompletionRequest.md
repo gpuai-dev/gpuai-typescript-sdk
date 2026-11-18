@@ -12,6 +12,10 @@ Name | Type
 `maxTokens` | number
 `stream` | boolean
 `streamOptions` | [StreamOptions](StreamOptions.md)
+`tools` | [Array&lt;ChatTool&gt;](ChatTool.md)
+`toolChoice` | [ChatCompletionRequestToolChoice](ChatCompletionRequestToolChoice.md)
+`parallelToolCalls` | boolean
+`responseFormat` | [ChatResponseFormat](ChatResponseFormat.md)
 
 ## Example
 
@@ -26,6 +30,10 @@ const example = {
   "maxTokens": null,
   "stream": null,
   "streamOptions": null,
+  "tools": null,
+  "toolChoice": null,
+  "parallelToolCalls": null,
+  "responseFormat": null,
 } satisfies ChatCompletionRequest
 
 console.log(example)

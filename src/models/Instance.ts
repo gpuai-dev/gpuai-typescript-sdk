@@ -27,6 +27,13 @@ import {
     InstanceGpuMemoryToJSON,
     InstanceGpuMemoryToJSONTyped,
 } from './InstanceGpuMemory';
+import type { InstanceDedicatedIP } from './InstanceDedicatedIP';
+import {
+    InstanceDedicatedIPFromJSON,
+    InstanceDedicatedIPFromJSONTyped,
+    InstanceDedicatedIPToJSON,
+    InstanceDedicatedIPToJSONTyped,
+} from './InstanceDedicatedIP';
 
 /**
  * 
@@ -160,6 +167,12 @@ export interface Instance {
      * @memberof Instance
      */
     bootPhase?: InstanceBootPhaseEnum;
+    /**
+     * 
+     * @type {InstanceDedicatedIP}
+     * @memberof Instance
+     */
+    dedicatedIp?: InstanceDedicatedIP;
 }
 
 
@@ -244,6 +257,7 @@ export function InstanceFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'lastReachableAt': json['last_reachable_at'] == null ? undefined : (new Date(json['last_reachable_at'])),
         'unreachableSince': json['unreachable_since'] == null ? undefined : (new Date(json['unreachable_since'])),
         'bootPhase': json['boot_phase'] == null ? undefined : json['boot_phase'],
+        'dedicatedIp': json['dedicated_ip'] == null ? undefined : InstanceDedicatedIPFromJSON(json['dedicated_ip']),
     };
 }
 
@@ -279,6 +293,7 @@ export function InstanceToJSONTyped(value?: Instance | null, ignoreDiscriminator
         'last_reachable_at': value['lastReachableAt'] == null ? value['lastReachableAt'] : value['lastReachableAt'].toISOString(),
         'unreachable_since': value['unreachableSince'] == null ? value['unreachableSince'] : value['unreachableSince'].toISOString(),
         'boot_phase': value['bootPhase'],
+        'dedicated_ip': InstanceDedicatedIPToJSON(value['dedicatedIp']),
     };
 }
 

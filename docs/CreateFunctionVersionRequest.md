@@ -20,6 +20,7 @@ Name | Type
 `timeout` | number
 `idleTimeout` | number
 `maxConcurrency` | number
+`secrets` | Array&lt;string&gt;
 
 ## Example
 
@@ -42,6 +43,7 @@ const example = {
   "timeout": null,
   "idleTimeout": null,
   "maxConcurrency": null,
+  "secrets": null,
 } satisfies CreateFunctionVersionRequest
 
 console.log(example)

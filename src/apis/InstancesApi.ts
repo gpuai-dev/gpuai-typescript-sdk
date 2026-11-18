@@ -127,6 +127,7 @@ export class InstancesApi extends runtime.BaseAPI {
     }
 
     /**
+     * Running a one-off script or batch work? Submit it as a job instead (POST /jobs): the machine is started for it and shut down a few minutes after it finishes, so nothing bills after the work is done.
      * Create an instance (async — returns 202 + Operation-Id header)
      */
     async createInstanceRaw(requestParameters: CreateInstanceOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Operation>> {
@@ -137,6 +138,7 @@ export class InstancesApi extends runtime.BaseAPI {
     }
 
     /**
+     * Running a one-off script or batch work? Submit it as a job instead (POST /jobs): the machine is started for it and shut down a few minutes after it finishes, so nothing bills after the work is done.
      * Create an instance (async — returns 202 + Operation-Id header)
      */
     async createInstance(requestParameters: CreateInstanceOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Operation> {

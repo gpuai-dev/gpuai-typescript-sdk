@@ -27,6 +27,7 @@ Name | Type
 `lastReachableAt` | Date
 `unreachableSince` | Date
 `bootPhase` | string
+`dedicatedIp` | [InstanceDedicatedIP](InstanceDedicatedIP.md)
 
 ## Example
 
@@ -56,6 +57,7 @@ const example = {
   "lastReachableAt": null,
   "unreachableSince": null,
   "bootPhase": null,
+  "dedicatedIp": null,
 } satisfies Instance
 
 console.log(example)

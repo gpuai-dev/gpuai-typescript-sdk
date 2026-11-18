@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { ChatCompletionRequestToolChoice } from './ChatCompletionRequestToolChoice';
+import {
+    ChatCompletionRequestToolChoiceFromJSON,
+    ChatCompletionRequestToolChoiceFromJSONTyped,
+    ChatCompletionRequestToolChoiceToJSON,
+    ChatCompletionRequestToolChoiceToJSONTyped,
+} from './ChatCompletionRequestToolChoice';
 import type { ChatMessage } from './ChatMessage';
 import {
     ChatMessageFromJSON,
@@ -27,6 +34,20 @@ import {
     StreamOptionsToJSON,
     StreamOptionsToJSONTyped,
 } from './StreamOptions';
+import type { ChatTool } from './ChatTool';
+import {
+    ChatToolFromJSON,
+    ChatToolFromJSONTyped,
+    ChatToolToJSON,
+    ChatToolToJSONTyped,
+} from './ChatTool';
+import type { ChatResponseFormat } from './ChatResponseFormat';
+import {
+    ChatResponseFormatFromJSON,
+    ChatResponseFormatFromJSONTyped,
+    ChatResponseFormatToJSON,
+    ChatResponseFormatToJSONTyped,
+} from './ChatResponseFormat';
 
 /**
  * 
@@ -70,6 +91,30 @@ export interface ChatCompletionRequest {
      * @memberof ChatCompletionRequest
      */
     streamOptions?: StreamOptions;
+    /**
+     * Functions the model may call (OpenAI shape). Only models whose /v1/models entry has supports_tools: true accept it; any other model returns 400 unsupported_parameter (param "tools").
+     * @type {Array<ChatTool>}
+     * @memberof ChatCompletionRequest
+     */
+    tools?: Array<ChatTool>;
+    /**
+     * 
+     * @type {ChatCompletionRequestToolChoice}
+     * @memberof ChatCompletionRequest
+     */
+    toolChoice?: ChatCompletionRequestToolChoice;
+    /**
+     * Whether the model may call several tools in one turn. Passed through.
+     * @type {boolean}
+     * @memberof ChatCompletionRequest
+     */
+    parallelToolCalls?: boolean;
+    /**
+     * 
+     * @type {ChatResponseFormat}
+     * @memberof ChatCompletionRequest
+     */
+    responseFormat?: ChatResponseFormat;
 }
 
 /**
@@ -97,6 +142,10 @@ export function ChatCompletionRequestFromJSONTyped(json: any, ignoreDiscriminato
         'maxTokens': json['max_tokens'] == null ? undefined : json['max_tokens'],
         'stream': json['stream'] == null ? undefined : json['stream'],
         'streamOptions': json['stream_options'] == null ? undefined : StreamOptionsFromJSON(json['stream_options']),
+        'tools': json['tools'] == null ? undefined : ((json['tools'] as Array<any>).map(ChatToolFromJSON)),
+        'toolChoice': json['tool_choice'] == null ? undefined : ChatCompletionRequestToolChoiceFromJSON(json['tool_choice']),
+        'parallelToolCalls': json['parallel_tool_calls'] == null ? undefined : json['parallel_tool_calls'],
+        'responseFormat': json['response_format'] == null ? undefined : ChatResponseFormatFromJSON(json['response_format']),
     };
 }
 
@@ -117,6 +166,10 @@ export function ChatCompletionRequestToJSONTyped(value?: ChatCompletionRequest |
         'max_tokens': value['maxTokens'],
         'stream': value['stream'],
         'stream_options': StreamOptionsToJSON(value['streamOptions']),
+        'tools': value['tools'] == null ? undefined : ((value['tools'] as Array<any>).map(ChatToolToJSON)),
+        'tool_choice': ChatCompletionRequestToolChoiceToJSON(value['toolChoice']),
+        'parallel_tool_calls': value['parallelToolCalls'],
+        'response_format': ChatResponseFormatToJSON(value['responseFormat']),
     };
 }
 

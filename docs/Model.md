@@ -15,6 +15,8 @@ Name | Type
 `category` | string
 `contextLength` | number
 `supportedParameters` | Array&lt;string&gt;
+`supportsTools` | boolean
+`supportsStructuredOutputs` | boolean
 `parameters` | [Array&lt;ModelParametersInner&gt;](ModelParametersInner.md)
 `pricing` | [ModelPricing](ModelPricing.md)
 `aliases` | Array&lt;string&gt;
@@ -38,6 +40,8 @@ const example = {
   "category": null,
   "contextLength": null,
   "supportedParameters": null,
+  "supportsTools": null,
+  "supportsStructuredOutputs": null,
   "parameters": null,
   "pricing": null,
   "aliases": null,
