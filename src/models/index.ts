@@ -90,6 +90,7 @@ export * from './ModelList';
 export * from './ModelParametersInner';
 export * from './ModelPricing';
 export * from './ModelRate';
+export * from './OfferingAlternative';
 export * from './OpenAIErrorEnvelope';
 export * from './OpenAIErrorEnvelopeError';
 export * from './Operation';

@@ -8,6 +8,9 @@ Name | Type
 ------------ | -------------
 `code` | string
 `detail` | string
+`alternatives` | [Array&lt;OfferingAlternative&gt;](OfferingAlternative.md)
+`currentPricePerHour` | number
+`maxPricePerHour` | number
 
 ## Example
 
@@ -18,6 +21,9 @@ import type { OperationError } from '@gpuai/sdk'
 const example = {
   "code": null,
   "detail": null,
+  "alternatives": null,
+  "currentPricePerHour": null,
+  "maxPricePerHour": null,
 } satisfies OperationError
 
 console.log(example)

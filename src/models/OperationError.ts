@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { OfferingAlternative } from './OfferingAlternative';
+import {
+    OfferingAlternativeFromJSON,
+    OfferingAlternativeFromJSONTyped,
+    OfferingAlternativeToJSON,
+    OfferingAlternativeToJSONTyped,
+} from './OfferingAlternative';
+
 /**
  * 
  * @export
@@ -20,7 +28,7 @@ import { mapValues } from '../runtime';
  */
 export interface OperationError {
     /**
-     * 
+     * Stable machine-readable failure code (see Problem.code), for example operation_failed (retryable after a backoff), price_changed or offering_unavailable (not retryable as sent).
      * @type {string}
      * @memberof OperationError
      */
@@ -31,6 +39,24 @@ export interface OperationError {
      * @memberof OperationError
      */
     detail?: string;
+    /**
+     * Present only when code is offering_unavailable: up to three live catalog rows of the same GPU type, count and tier, cheapest first. Pass one's offering_id as the new pin.
+     * @type {Array<OfferingAlternative>}
+     * @memberof OperationError
+     */
+    alternatives?: Array<OfferingAlternative>;
+    /**
+     * Present only when code is price_changed: the live hourly price the launch found.
+     * @type {number}
+     * @memberof OperationError
+     */
+    currentPricePerHour?: number;
+    /**
+     * Present only when code is price_changed: the hourly price the launch was approved at (max_price_per_hour, or the viewed price). Relaunch with max_price_per_hour of at least current_price_per_hour to accept the new price.
+     * @type {number}
+     * @memberof OperationError
+     */
+    maxPricePerHour?: number;
 }
 
 /**
@@ -52,6 +78,9 @@ export function OperationErrorFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'code': json['code'] == null ? undefined : json['code'],
         'detail': json['detail'] == null ? undefined : json['detail'],
+        'alternatives': json['alternatives'] == null ? undefined : ((json['alternatives'] as Array<any>).map(OfferingAlternativeFromJSON)),
+        'currentPricePerHour': json['current_price_per_hour'] == null ? undefined : json['current_price_per_hour'],
+        'maxPricePerHour': json['max_price_per_hour'] == null ? undefined : json['max_price_per_hour'],
     };
 }
 
@@ -68,6 +97,9 @@ export function OperationErrorToJSONTyped(value?: OperationError | null, ignoreD
         
         'code': value['code'],
         'detail': value['detail'],
+        'alternatives': value['alternatives'] == null ? undefined : ((value['alternatives'] as Array<any>).map(OfferingAlternativeToJSON)),
+        'current_price_per_hour': value['currentPricePerHour'],
+        'max_price_per_hour': value['maxPricePerHour'],
     };
 }
 

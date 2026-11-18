@@ -75,6 +75,7 @@ export const ProblemCodeEnum = {
     ModelTooLarge: 'model_too_large',
     GpuVramTooSmall: 'gpu_vram_too_small',
     PriceChanged: 'price_changed',
+    OfferingUnavailable: 'offering_unavailable',
     DedicatedIpLimit: 'dedicated_ip_limit',
     DedicatedIpUnavailable: 'dedicated_ip_unavailable',
     InsufficientBalance: 'insufficient_balance',

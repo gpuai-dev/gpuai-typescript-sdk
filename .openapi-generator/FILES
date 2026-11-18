@@ -102,6 +102,7 @@ docs/ModelList.md
 docs/ModelParametersInner.md
 docs/ModelPricing.md
 docs/ModelRate.md
+docs/OfferingAlternative.md
 docs/OpenAIErrorEnvelope.md
 docs/OpenAIErrorEnvelopeError.md
 docs/Operation.md
@@ -258,6 +259,7 @@ src/models/ModelList.ts
 src/models/ModelParametersInner.ts
 src/models/ModelPricing.ts
 src/models/ModelRate.ts
+src/models/OfferingAlternative.ts
 src/models/OpenAIErrorEnvelope.ts
 src/models/OpenAIErrorEnvelopeError.ts
 src/models/Operation.ts
