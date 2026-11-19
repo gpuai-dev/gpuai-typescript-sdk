@@ -1,4 +1,4 @@
-# @gpuai/sdk@0.5.3
+# @gpuai/sdk@0.5.5
 
 A TypeScript SDK client for the api.gpu.ai API.
 
@@ -77,6 +77,13 @@ All URIs are relative to *https://api.gpu.ai/v1*
 *CommunityApi* | [**listCommunityMachines**](docs/CommunityApi.md#listcommunitymachines) | **GET** /community/machines | List your Community Cloud machines
 *CommunityApi* | [**reclaimCommunityMachine**](docs/CommunityApi.md#reclaimcommunitymachine) | **POST** /community/machines/{id}/reclaim | Reclaim a spot-tier Community Cloud machine
 *CommunityApi* | [**registerCommunityMachine**](docs/CommunityApi.md#registercommunitymachineoperation) | **POST** /community/machines | Register a Community Cloud machine
+*EndpointsApi* | [**createEndpoint**](docs/EndpointsApi.md#createendpoint) | **POST** /endpoints | Create a model endpoint
+*EndpointsApi* | [**createEndpointChatCompletion**](docs/EndpointsApi.md#createendpointchatcompletion) | **POST** /endpoints/{id}/openai/v1/chat/completions | Chat completion on a model endpoint (OpenAI-compatible)
+*EndpointsApi* | [**createEndpointCompletion**](docs/EndpointsApi.md#createendpointcompletion) | **POST** /endpoints/{id}/openai/v1/completions | Text completion on a model endpoint (OpenAI-compatible)
+*EndpointsApi* | [**deleteEndpoint**](docs/EndpointsApi.md#deleteendpoint) | **DELETE** /endpoints/{id} | Delete a model endpoint
+*EndpointsApi* | [**getEndpoint**](docs/EndpointsApi.md#getendpoint) | **GET** /endpoints/{id} | Get a model endpoint
+*EndpointsApi* | [**listEndpointModels**](docs/EndpointsApi.md#listendpointmodels) | **GET** /endpoints/{id}/openai/v1/models | List the model an endpoint serves (OpenAI-compatible)
+*EndpointsApi* | [**listEndpoints**](docs/EndpointsApi.md#listendpoints) | **GET** /endpoints | List model endpoints
 *EnvironmentsApi* | [**getEnvironments**](docs/EnvironmentsApi.md#getenvironments) | **GET** /environments | List launch environments (no auth required)
 *FineTuningApi* | [**cancelFineTuningJob**](docs/FineTuningApi.md#cancelfinetuningjob) | **POST** /fine_tuning/jobs/{id}/cancel | Cancel a fine-tuning job (OpenAI-compatible)
 *FineTuningApi* | [**createFile**](docs/FineTuningApi.md#createfile) | **POST** /files | Upload a fine-tuning dataset file (OpenAI-compatible)
@@ -111,18 +118,34 @@ All URIs are relative to *https://api.gpu.ai/v1*
 *InferenceApi* | [**updateDataRetention**](docs/InferenceApi.md#updatedataretentionoperation) | **PUT** /organization/data-retention | Turn zero data retention on or off for the org
 *InstancesApi* | [**createInstance**](docs/InstancesApi.md#createinstanceoperation) | **POST** /instances | Create an instance (async — returns 202 + Operation-Id header)
 *InstancesApi* | [**deleteInstance**](docs/InstancesApi.md#deleteinstance) | **DELETE** /instances/{id} | Terminate an instance (idempotent)
+*InstancesApi* | [**getDedicatedIpOffer**](docs/InstancesApi.md#getdedicatedipoffer) | **GET** /dedicated-ip | Get the dedicated public IP add-on offer
 *InstancesApi* | [**getInstance**](docs/InstancesApi.md#getinstance) | **GET** /instances/{id} | Get an instance
 *InstancesApi* | [**getInstanceGpuSuggestion**](docs/InstancesApi.md#getinstancegpusuggestion) | **GET** /instances/{id}/gpu-suggestion | Suggest a lower-priced GPU for an instance
 *InstancesApi* | [**listInstances**](docs/InstancesApi.md#listinstances) | **GET** /instances | List instances
 *InstancesApi* | [**updateInstance**](docs/InstancesApi.md#updateinstanceoperation) | **PATCH** /instances/{id} | Update an instance (rename only in v1)
+*JobsApi* | [**cancelJob**](docs/JobsApi.md#canceljob) | **POST** /jobs/{id}/cancel | Cancel a job
+*JobsApi* | [**createJob**](docs/JobsApi.md#createjob) | **POST** /jobs | Submit a job
+*JobsApi* | [**getJob**](docs/JobsApi.md#getjob) | **GET** /jobs/{id} | Get a job
+*JobsApi* | [**getJobLogs**](docs/JobsApi.md#getjoblogs) | **GET** /jobs/{id}/logs | Read a job\&#39;s output
+*JobsApi* | [**getJobTelemetry**](docs/JobsApi.md#getjobtelemetry) | **GET** /jobs/{id}/telemetry | Read a job\&#39;s GPU memory telemetry
+*JobsApi* | [**getJobTrial**](docs/JobsApi.md#getjobtrial) | **GET** /jobs/trial | Whether this organization\&#39;s first jobs are free
+*JobsApi* | [**listJobGpuTypes**](docs/JobsApi.md#listjobgputypes) | **GET** /jobs/gpu-types | List the GPU types a job can run on
+*JobsApi* | [**listJobs**](docs/JobsApi.md#listjobs) | **GET** /jobs | List jobs
 *MarketApi* | [**getMarketHistory**](docs/MarketApi.md#getmarkethistory) | **GET** /market-history | Get a GPU\&#39;s price and availability over time
 *MetaApi* | [**getHealth**](docs/MetaApi.md#gethealth) | **GET** /health | Liveness probe
 *MetaApi* | [**getOpenApiSpec**](docs/MetaApi.md#getopenapispec) | **GET** /openapi.json | OpenAPI 3.1 specification
+*OperationsApi* | [**cancelOperation**](docs/OperationsApi.md#canceloperation) | **POST** /operations/{id}/cancel | Cancel a launch that has not created its instance yet
 *OperationsApi* | [**getOperation**](docs/OperationsApi.md#getoperation) | **GET** /operations/{id} | Get an async operation status
 *PricingApi* | [**listPricing**](docs/PricingApi.md#listpricing) | **GET** /pricing | List pricing per GPU type + region (no auth required)
 *RegistryCredentialsApi* | [**createRegistryCredential**](docs/RegistryCredentialsApi.md#createregistrycredentialoperation) | **POST** /registry-credentials | Store a registry credential
 *RegistryCredentialsApi* | [**deleteRegistryCredential**](docs/RegistryCredentialsApi.md#deleteregistrycredential) | **DELETE** /registry-credentials/{id} | Delete a registry credential
 *RegistryCredentialsApi* | [**listRegistryCredentials**](docs/RegistryCredentialsApi.md#listregistrycredentials) | **GET** /registry-credentials | List registry credentials
+*SecretsApi* | [**createSecret**](docs/SecretsApi.md#createsecret) | **POST** /secrets | Create a secret
+*SecretsApi* | [**deleteSecret**](docs/SecretsApi.md#deletesecret) | **DELETE** /secrets/{name} | Delete a secret
+*SecretsApi* | [**getSecret**](docs/SecretsApi.md#getsecret) | **GET** /secrets/{name} | Get a secret\&#39;s metadata
+*SecretsApi* | [**importSecrets**](docs/SecretsApi.md#importsecrets) | **POST** /secrets/import | Import secrets
+*SecretsApi* | [**listSecrets**](docs/SecretsApi.md#listsecrets) | **GET** /secrets | List secrets
+*SecretsApi* | [**putSecret**](docs/SecretsApi.md#putsecret) | **PUT** /secrets/{name} | Create or replace a secret
 *SshKeysApi* | [**createSshKey**](docs/SshKeysApi.md#createsshkeyoperation) | **POST** /ssh-keys | Create an SSH key
 *SshKeysApi* | [**deleteSshKey**](docs/SshKeysApi.md#deletesshkey) | **DELETE** /ssh-keys/{id} | Delete an SSH key (idempotent — 404 on already-gone per D-07)
 *SshKeysApi* | [**getSshKey**](docs/SshKeysApi.md#getsshkey) | **GET** /ssh-keys/{id} | Get an SSH key
@@ -181,12 +204,18 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [CreateWebhookEndpointRequest](docs/CreateWebhookEndpointRequest.md)
 - [CryptoDeposit](docs/CryptoDeposit.md)
 - [DataRetention](docs/DataRetention.md)
+- [DedicatedIPOffer](docs/DedicatedIPOffer.md)
 - [DedicatedIPRequest](docs/DedicatedIPRequest.md)
 - [Embedding](docs/Embedding.md)
 - [EmbeddingsRequest](docs/EmbeddingsRequest.md)
 - [EmbeddingsRequestInput](docs/EmbeddingsRequestInput.md)
 - [EmbeddingsResponse](docs/EmbeddingsResponse.md)
 - [EmbeddingsUsage](docs/EmbeddingsUsage.md)
+- [Endpoint](docs/Endpoint.md)
+- [EndpointCreate](docs/EndpointCreate.md)
+- [EndpointList](docs/EndpointList.md)
+- [EndpointMachine](docs/EndpointMachine.md)
+- [EndpointReplicaCounts](docs/EndpointReplicaCounts.md)
 - [Environments](docs/Environments.md)
 - [FileObject](docs/FileObject.md)
 - [FineTuningJob](docs/FineTuningJob.md)
@@ -224,6 +253,18 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [InstancePage](docs/InstancePage.md)
 - [Invoice](docs/Invoice.md)
 - [InvoiceList](docs/InvoiceList.md)
+- [Job](docs/Job.md)
+- [JobAttempt](docs/JobAttempt.md)
+- [JobCreate](docs/JobCreate.md)
+- [JobGpuTypes](docs/JobGpuTypes.md)
+- [JobGpuTypesDataInner](docs/JobGpuTypesDataInner.md)
+- [JobLogChunk](docs/JobLogChunk.md)
+- [JobLogs](docs/JobLogs.md)
+- [JobPage](docs/JobPage.md)
+- [JobSharingHint](docs/JobSharingHint.md)
+- [JobTelemetry](docs/JobTelemetry.md)
+- [JobTelemetryPoint](docs/JobTelemetryPoint.md)
+- [JobTrial](docs/JobTrial.md)
 - [ListCommunityMachines200Response](docs/ListCommunityMachines200Response.md)
 - [ListDeposits200Response](docs/ListDeposits200Response.md)
 - [ListRegistryCredentials200Response](docs/ListRegistryCredentials200Response.md)
@@ -248,6 +289,13 @@ All URIs are relative to *https://api.gpu.ai/v1*
 - [RegistryCredential](docs/RegistryCredential.md)
 - [SSHKey](docs/SSHKey.md)
 - [SSHKeyPage](docs/SSHKeyPage.md)
+- [Secret](docs/Secret.md)
+- [SecretCreate](docs/SecretCreate.md)
+- [SecretImportItem](docs/SecretImportItem.md)
+- [SecretImportRequest](docs/SecretImportRequest.md)
+- [SecretImportResult](docs/SecretImportResult.md)
+- [SecretList](docs/SecretList.md)
+- [SecretPut](docs/SecretPut.md)
 - [SpendingLimit](docs/SpendingLimit.md)
 - [StreamOptions](docs/StreamOptions.md)
 - [SupplierMachineView](docs/SupplierMachineView.md)
@@ -290,7 +338,7 @@ and is automatically generated by the
 [OpenAPI Generator](https://openapi-generator.tech) project:
 
 - API version: `1.0.0`
-- Package version: `0.5.3`
+- Package version: `0.5.5`
 - Generator version: `7.24.0`
 - Build package: `org.openapitools.codegen.languages.TypeScriptFetchClientCodegen`
 

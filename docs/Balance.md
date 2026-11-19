@@ -13,6 +13,7 @@ Name | Type
 `autoPayThresholdCents` | number
 `autoPayAmountCents` | number
 `burnCentsPerHour` | number
+`runwayHours` | number
 
 ## Example
 
@@ -27,6 +28,7 @@ const example = {
   "autoPayThresholdCents": null,
   "autoPayAmountCents": null,
   "burnCentsPerHour": null,
+  "runwayHours": null,
 } satisfies Balance
 
 console.log(example)

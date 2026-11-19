@@ -67,7 +67,10 @@ export const WebhookEndpointEventTypesEnum = {
     InstanceTerminated: 'instance.terminated',
     InstanceFailed: 'instance.failed',
     VideoCompleted: 'video.completed',
-    VideoFailed: 'video.failed'
+    VideoFailed: 'video.failed',
+    WatchAlertFired: 'watch.alert.fired',
+    BalanceLow: 'balance.low',
+    BalanceExhausted: 'balance.exhausted'
 } as const;
 export type WebhookEndpointEventTypesEnum = typeof WebhookEndpointEventTypesEnum[keyof typeof WebhookEndpointEventTypesEnum];
 

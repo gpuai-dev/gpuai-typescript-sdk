@@ -6,6 +6,7 @@ All URIs are relative to *https://api.gpu.ai/v1*
 |------------- | ------------- | -------------|
 | [**createInstance**](InstancesApi.md#createinstanceoperation) | **POST** /instances | Create an instance (async — returns 202 + Operation-Id header) |
 | [**deleteInstance**](InstancesApi.md#deleteinstance) | **DELETE** /instances/{id} | Terminate an instance (idempotent) |
+| [**getDedicatedIpOffer**](InstancesApi.md#getdedicatedipoffer) | **GET** /dedicated-ip | Get the dedicated public IP add-on offer |
 | [**getInstance**](InstancesApi.md#getinstance) | **GET** /instances/{id} | Get an instance |
 | [**getInstanceGpuSuggestion**](InstancesApi.md#getinstancegpusuggestion) | **GET** /instances/{id}/gpu-suggestion | Suggest a lower-priced GPU for an instance |
 | [**listInstances**](InstancesApi.md#listinstances) | **GET** /instances | List instances |
@@ -82,7 +83,7 @@ example().catch(console.error);
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **202** | Accepted; long-running operation |  * Operation-Id - Use GET /operations/{id} to poll <br>  * GPUAI-Hint - Advisory only, and absent on most launches. Sent when the request is a one-off batch run (a custom image with a command and auto_terminate_hours) to point at Jobs (POST /jobs), which start a machine for the work and shut it down a few minutes after it ends. It never changes the launch. <br>  |
+| **202** | Accepted; long-running operation |  * Operation-Id - Use GET /operations/{id} to poll <br>  * GPUAI-Hint - Advisory only, and absent on most launches. Sent when the request is a one-off batch run (a custom image with a command and auto_terminate_hours) to point at Jobs (POST /jobs), which start a machine for the work and shut it down a few minutes after it ends. It never changes the launch. <br>  * GPUAI-Balance-Warning -  <br>  |
 | **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **0** | Error response (RFC 7807) |  -  |
 
@@ -161,6 +162,72 @@ example().catch(console.error);
 | **202** | Accepted; termination in progress |  * Operation-Id -  <br>  |
 | **403** | Forbidden — members can only terminate instances they created |  -  |
 | **404** | Already gone — idempotent terminate (D-07) |  -  |
+| **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **0** | Error response (RFC 7807) |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## getDedicatedIpOffer
+
+> DedicatedIPOffer getDedicatedIpOffer()
+
+Get the dedicated public IP add-on offer
+
+Describes the dedicated public IPv4 add-on for instances and the caller\&#39;s usage of it. A dedicated IP is a GPU.ai-owned public address (never the supplier\&#39;s) that forwards the chosen inbound TCP ports, raw and without TLS termination, to the same ports on the instance\&#39;s loopback. Request one at launch with the &#x60;dedicated_ip&#x60; field on POST /instances.  The response carries the hourly fee charged while the address is attached, the transfer price per GB (counted in both directions), the transfer cap per attachment after which forwarding is suspended, the ports a launch may forward, the organization\&#39;s limit and how many it holds, how many addresses are free right now, and the acceptable use policy. Requires the &#x60;instances:read&#x60; scope. Returns 404 when the add-on is not enabled for this deployment. 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  InstancesApi,
+} from '@gpuai/sdk';
+import type { GetDedicatedIpOfferRequest } from '@gpuai/sdk';
+
+async function example() {
+  console.log("🚀 Testing @gpuai/sdk SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new InstancesApi(config);
+
+  try {
+    const data = await api.getDedicatedIpOffer();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**DedicatedIPOffer**](DedicatedIPOffer.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`, `application/problem+json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **404** | The dedicated IP add-on is not enabled for this deployment. |  -  |
 | **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **0** | Error response (RFC 7807) |  -  |
 

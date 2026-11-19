@@ -58,6 +58,12 @@ export interface Balance {
      * @memberof Balance
      */
     burnCentsPerHour: number | null;
+    /**
+     * How many hours the balance lasts at the current usage: the balance divided by `burn_cents_per_hour` plus serverless inference spend over the last hour, rounded to 2 places. `null` when nothing is running or the burn rate could not be determined; 0 when the balance is at or below $0 while burning. Machines stop when the balance reaches $0.
+     * @type {number}
+     * @memberof Balance
+     */
+    runwayHours?: number | null;
 }
 
 /**
@@ -89,6 +95,7 @@ export function BalanceFromJSONTyped(json: any, ignoreDiscriminator: boolean): B
         'autoPayThresholdCents': json['auto_pay_threshold_cents'],
         'autoPayAmountCents': json['auto_pay_amount_cents'],
         'burnCentsPerHour': json['burn_cents_per_hour'],
+        'runwayHours': json['runway_hours'] === undefined ? undefined : json['runway_hours'] === null ? null : json['runway_hours'],
     };
 }
 
@@ -109,6 +116,7 @@ export function BalanceToJSONTyped(value?: Balance | null, ignoreDiscriminator: 
         'auto_pay_threshold_cents': value['autoPayThresholdCents'],
         'auto_pay_amount_cents': value['autoPayAmountCents'],
         'burn_cents_per_hour': value['burnCentsPerHour'],
+        'runway_hours': value['runwayHours'],
     };
 }
 

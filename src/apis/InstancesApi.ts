@@ -19,6 +19,11 @@ import {
     CreateInstanceRequestToJSON,
 } from '../models/CreateInstanceRequest';
 import {
+    type DedicatedIPOffer,
+    DedicatedIPOfferFromJSON,
+    DedicatedIPOfferToJSON,
+} from '../models/DedicatedIPOffer';
+import {
     type GpuSuggestion,
     GpuSuggestionFromJSON,
     GpuSuggestionToJSON,
@@ -202,6 +207,53 @@ export class InstancesApi extends runtime.BaseAPI {
      */
     async deleteInstance(requestParameters: DeleteInstanceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Operation> {
         const response = await this.deleteInstanceRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getDedicatedIpOffer without sending the request
+     */
+    async getDedicatedIpOfferRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/dedicated-ip`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Describes the dedicated public IPv4 add-on for instances and the caller\'s usage of it. A dedicated IP is a GPU.ai-owned public address (never the supplier\'s) that forwards the chosen inbound TCP ports, raw and without TLS termination, to the same ports on the instance\'s loopback. Request one at launch with the `dedicated_ip` field on POST /instances.  The response carries the hourly fee charged while the address is attached, the transfer price per GB (counted in both directions), the transfer cap per attachment after which forwarding is suspended, the ports a launch may forward, the organization\'s limit and how many it holds, how many addresses are free right now, and the acceptable use policy. Requires the `instances:read` scope. Returns 404 when the add-on is not enabled for this deployment. 
+     * Get the dedicated public IP add-on offer
+     */
+    async getDedicatedIpOfferRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DedicatedIPOffer>> {
+        const requestOptions = await this.getDedicatedIpOfferRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DedicatedIPOfferFromJSON(jsonValue));
+    }
+
+    /**
+     * Describes the dedicated public IPv4 add-on for instances and the caller\'s usage of it. A dedicated IP is a GPU.ai-owned public address (never the supplier\'s) that forwards the chosen inbound TCP ports, raw and without TLS termination, to the same ports on the instance\'s loopback. Request one at launch with the `dedicated_ip` field on POST /instances.  The response carries the hourly fee charged while the address is attached, the transfer price per GB (counted in both directions), the transfer cap per attachment after which forwarding is suspended, the ports a launch may forward, the organization\'s limit and how many it holds, how many addresses are free right now, and the acceptable use policy. Requires the `instances:read` scope. Returns 404 when the add-on is not enabled for this deployment. 
+     * Get the dedicated public IP add-on offer
+     */
+    async getDedicatedIpOffer(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DedicatedIPOffer> {
+        const response = await this.getDedicatedIpOfferRaw(initOverrides);
         return await response.value();
     }
 

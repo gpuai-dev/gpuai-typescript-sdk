@@ -174,7 +174,7 @@ example().catch(console.error);
 
 Get the org credit balance
 
-Returns the organization\&#39;s credit balance, its auto-pay configuration, and the live burn rate. Requires the &#x60;billing:read&#x60; scope. The organization is taken from the authenticated API key, never from a parameter.  Divide &#x60;balance_cents&#x60; by &#x60;burn_cents_per_hour&#x60; for the remaining runway in hours. The quotient is undefined in three cases a caller must keep apart: &#x60;burn_cents_per_hour&#x60; is 0 (nothing running, so the balance funds unbounded idle time), it is &#x60;null&#x60; (the burn rate could not be determined — NOT the same as idle), or the balance is already at or below zero.  This is the balance itself — for spend against a configured cap see &#x60;/billing/spending-limit&#x60;, and for past consumption see &#x60;/usage&#x60;. 
+Returns the organization\&#39;s credit balance, its auto-pay configuration, and the live burn rate. Requires the &#x60;billing:read&#x60; scope. The organization is taken from the authenticated API key, never from a parameter.  Divide &#x60;balance_cents&#x60; by &#x60;burn_cents_per_hour&#x60; for the remaining runway in hours. The quotient is undefined in three cases a caller must keep apart: &#x60;burn_cents_per_hour&#x60; is 0 (nothing running, so the balance funds unbounded idle time), it is &#x60;null&#x60; (the burn rate could not be determined — NOT the same as idle), or the balance is already at or below zero.  This is the balance itself — for spend against a configured cap see &#x60;/billing/spending-limit&#x60;, and for past consumption see &#x60;/usage&#x60;.  &#x60;runway_hours&#x60; does that division for you, adding serverless inference spend over the last hour to the burn. While it is under the low-balance threshold (2 hours by default) and auto-pay is off or failing, every authenticated response carries the &#x60;GPUAI-Balance-Warning&#x60; header. 
 
 ### Example
 
@@ -226,7 +226,7 @@ This endpoint does not need any parameter.
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | OK |  -  |
+| **200** | OK |  * GPUAI-Balance-Warning -  <br>  |
 | **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **0** | Error response (RFC 7807) |  -  |
 

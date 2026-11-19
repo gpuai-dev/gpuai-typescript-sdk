@@ -24,6 +24,10 @@ import {
     ProblemToJSON,
 } from '../models/Problem';
 
+export interface CancelOperationRequest {
+    id: string;
+}
+
 export interface GetOperationRequest {
     id: string;
 }
@@ -32,6 +36,61 @@ export interface GetOperationRequest {
  * 
  */
 export class OperationsApi extends runtime.BaseAPI {
+
+    /**
+     * Creates request options for cancelOperation without sending the request
+     */
+    async cancelOperationRequestOpts(requestParameters: CancelOperationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling cancelOperation().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/operations/{id}/cancel`;
+        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Cancels an instance.create operation that is still pending or in_progress and has no resource_id yet. Nothing is created or billed for a cancelled launch; if the supplier finishes creating the machine after the cancel, it is terminated right away. Cancelling an operation that already finished returns it unchanged, so the call is safe to repeat. Scoped like GET /operations/{id}: only the key that started the operation can cancel it. Requires the `instances:write` scope.
+     * Cancel a launch that has not created its instance yet
+     */
+    async cancelOperationRaw(requestParameters: CancelOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Operation>> {
+        const requestOptions = await this.cancelOperationRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OperationFromJSON(jsonValue));
+    }
+
+    /**
+     * Cancels an instance.create operation that is still pending or in_progress and has no resource_id yet. Nothing is created or billed for a cancelled launch; if the supplier finishes creating the machine after the cancel, it is terminated right away. Cancelling an operation that already finished returns it unchanged, so the call is safe to repeat. Scoped like GET /operations/{id}: only the key that started the operation can cancel it. Requires the `instances:write` scope.
+     * Cancel a launch that has not created its instance yet
+     */
+    async cancelOperation(requestParameters: CancelOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Operation> {
+        const response = await this.cancelOperationRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Creates request options for getOperation without sending the request
