@@ -24,6 +24,11 @@ import {
     ChatCompletionResponseToJSON,
 } from '../models/ChatCompletionResponse';
 import {
+    type DataRetention,
+    DataRetentionFromJSON,
+    DataRetentionToJSON,
+} from '../models/DataRetention';
+import {
     type EmbeddingsRequest,
     EmbeddingsRequestFromJSON,
     EmbeddingsRequestToJSON,
@@ -59,6 +64,16 @@ import {
     OpenAIErrorEnvelopeToJSON,
 } from '../models/OpenAIErrorEnvelope';
 import {
+    type Problem,
+    ProblemFromJSON,
+    ProblemToJSON,
+} from '../models/Problem';
+import {
+    type UpdateDataRetentionRequest,
+    UpdateDataRetentionRequestFromJSON,
+    UpdateDataRetentionRequestToJSON,
+} from '../models/UpdateDataRetentionRequest';
+import {
     type VideoCreateRequest,
     VideoCreateRequestFromJSON,
     VideoCreateRequestToJSON,
@@ -80,15 +95,18 @@ export interface CancelVideoRequest {
 
 export interface CreateChatCompletionRequest {
     chatCompletionRequest: ChatCompletionRequest;
+    xGPUAIZeroDataRetention?: CreateChatCompletionXGPUAIZeroDataRetentionEnum;
 }
 
 export interface CreateEmbeddingsRequest {
     embeddingsRequest: EmbeddingsRequest;
+    xGPUAIZeroDataRetention?: CreateEmbeddingsXGPUAIZeroDataRetentionEnum;
 }
 
 export interface CreateImageRequest {
     imagesGenerationsRequest: ImagesGenerationsRequest;
     idempotencyKey?: string;
+    xGPUAIZeroDataRetention?: CreateImageXGPUAIZeroDataRetentionEnum;
 }
 
 export interface CreateVideoRequest {
@@ -115,6 +133,10 @@ export interface ListModelsRequest {
 export interface ListVideosRequest {
     after?: string;
     limit?: number;
+}
+
+export interface UpdateDataRetentionOperationRequest {
+    updateDataRetentionRequest: UpdateDataRetentionRequest;
 }
 
 /**
@@ -192,6 +214,10 @@ export class InferenceApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['xGPUAIZeroDataRetention'] != null) {
+            headerParameters['X-GPUAI-Zero-Data-Retention'] = String(requestParameters['xGPUAIZeroDataRetention']);
+        }
+
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
             const tokenString = await token("bearerAuth", []);
@@ -246,6 +272,10 @@ export class InferenceApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xGPUAIZeroDataRetention'] != null) {
+            headerParameters['X-GPUAI-Zero-Data-Retention'] = String(requestParameters['xGPUAIZeroDataRetention']);
+        }
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
@@ -306,6 +336,10 @@ export class InferenceApi extends runtime.BaseAPI {
 
         if (requestParameters['idempotencyKey'] != null) {
             headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+        if (requestParameters['xGPUAIZeroDataRetention'] != null) {
+            headerParameters['X-GPUAI-Zero-Data-Retention'] = String(requestParameters['xGPUAIZeroDataRetention']);
         }
 
         if (this.configuration && this.configuration.accessToken) {
@@ -406,6 +440,53 @@ export class InferenceApi extends runtime.BaseAPI {
      */
     async createVideo(requestParameters: CreateVideoRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<VideoJob> {
         const response = await this.createVideoRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getDataRetention without sending the request
+     */
+    async getDataRetentionRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/organization/data-retention`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns whether zero data retention (ZDR) is on for the organization. When it is on, chat, embeddings and image requests route only to model hosts that keep no prompt or output content, a model without one returns 400 `zero_data_retention_unavailable`, and video generation is refused. Requires the `serverless:read` scope. The organization is taken from the authenticated API key. 
+     * Get the org zero data retention setting
+     */
+    async getDataRetentionRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DataRetention>> {
+        const requestOptions = await this.getDataRetentionRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DataRetentionFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns whether zero data retention (ZDR) is on for the organization. When it is on, chat, embeddings and image requests route only to model hosts that keep no prompt or output content, a model without one returns 400 `zero_data_retention_unavailable`, and video generation is refused. Requires the `serverless:read` scope. The organization is taken from the authenticated API key. 
+     * Get the org zero data retention setting
+     */
+    async getDataRetention(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DataRetention> {
+        const response = await this.getDataRetentionRaw(initOverrides);
         return await response.value();
     }
 
@@ -672,8 +753,89 @@ export class InferenceApi extends runtime.BaseAPI {
         return await response.value();
     }
 
+    /**
+     * Creates request options for updateDataRetention without sending the request
+     */
+    async updateDataRetentionRequestOpts(requestParameters: UpdateDataRetentionOperationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['updateDataRetentionRequest'] == null) {
+            throw new runtime.RequiredError(
+                'updateDataRetentionRequest',
+                'Required parameter "updateDataRetentionRequest" was null or undefined when calling updateDataRetention().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/organization/data-retention`;
+
+        return {
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UpdateDataRetentionRequestToJSON(requestParameters['updateDataRetentionRequest']),
+        };
+    }
+
+    /**
+     * Sets the organization\'s zero data retention (ZDR) setting. Takes effect from the next inference request. Requires the `serverless:write` scope AND org-admin privileges (a non-admin member gets 403). `zero_data_retention` is required (422 when missing). 
+     * Turn zero data retention on or off for the org
+     */
+    async updateDataRetentionRaw(requestParameters: UpdateDataRetentionOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DataRetention>> {
+        const requestOptions = await this.updateDataRetentionRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DataRetentionFromJSON(jsonValue));
+    }
+
+    /**
+     * Sets the organization\'s zero data retention (ZDR) setting. Takes effect from the next inference request. Requires the `serverless:write` scope AND org-admin privileges (a non-admin member gets 403). `zero_data_retention` is required (422 when missing). 
+     * Turn zero data retention on or off for the org
+     */
+    async updateDataRetention(requestParameters: UpdateDataRetentionOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DataRetention> {
+        const response = await this.updateDataRetentionRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
 }
 
+/**
+ * @export
+ */
+export const CreateChatCompletionXGPUAIZeroDataRetentionEnum = {
+    True: 'true',
+    False: 'false'
+} as const;
+export type CreateChatCompletionXGPUAIZeroDataRetentionEnum = typeof CreateChatCompletionXGPUAIZeroDataRetentionEnum[keyof typeof CreateChatCompletionXGPUAIZeroDataRetentionEnum];
+/**
+ * @export
+ */
+export const CreateEmbeddingsXGPUAIZeroDataRetentionEnum = {
+    True: 'true',
+    False: 'false'
+} as const;
+export type CreateEmbeddingsXGPUAIZeroDataRetentionEnum = typeof CreateEmbeddingsXGPUAIZeroDataRetentionEnum[keyof typeof CreateEmbeddingsXGPUAIZeroDataRetentionEnum];
+/**
+ * @export
+ */
+export const CreateImageXGPUAIZeroDataRetentionEnum = {
+    True: 'true',
+    False: 'false'
+} as const;
+export type CreateImageXGPUAIZeroDataRetentionEnum = typeof CreateImageXGPUAIZeroDataRetentionEnum[keyof typeof CreateImageXGPUAIZeroDataRetentionEnum];
 /**
  * @export
  */

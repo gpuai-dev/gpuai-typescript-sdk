@@ -17,6 +17,7 @@ Name | Type
 `supportedParameters` | Array&lt;string&gt;
 `supportsTools` | boolean
 `supportsStructuredOutputs` | boolean
+`zeroDataRetention` | boolean
 `parameters` | [Array&lt;ModelParametersInner&gt;](ModelParametersInner.md)
 `pricing` | [ModelPricing](ModelPricing.md)
 `aliases` | Array&lt;string&gt;
@@ -42,6 +43,7 @@ const example = {
   "supportedParameters": null,
   "supportsTools": null,
   "supportsStructuredOutputs": null,
+  "zeroDataRetention": null,
   "parameters": null,
   "pricing": null,
   "aliases": null,

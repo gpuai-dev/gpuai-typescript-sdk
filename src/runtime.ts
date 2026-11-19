@@ -75,7 +75,7 @@ export class Configuration {
     }
 
     get headers(): HTTPHeaders | undefined {
-        return { 'User-Agent': 'gpuai-sdk-ts/0.5.1', ...this.configuration.headers };
+        return { 'User-Agent': 'gpuai-sdk-ts/0.5.2', ...this.configuration.headers };
     }
 
     get credentials(): RequestCredentials | undefined {

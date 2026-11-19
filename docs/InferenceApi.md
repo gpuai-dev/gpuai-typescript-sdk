@@ -9,11 +9,13 @@ All URIs are relative to *https://api.gpu.ai/v1*
 | [**createEmbeddings**](InferenceApi.md#createembeddings) | **POST** /embeddings | Create embeddings (OpenAI-compatible) |
 | [**createImage**](InferenceApi.md#createimage) | **POST** /images/generations | Create image (OpenAI-compatible) |
 | [**createVideo**](InferenceApi.md#createvideo) | **POST** /videos | Create a video generation job (async) |
+| [**getDataRetention**](InferenceApi.md#getdataretention) | **GET** /organization/data-retention | Get the org zero data retention setting |
 | [**getModel**](InferenceApi.md#getmodel) | **GET** /models/{id} | Get a specific model (OpenAI-compatible) |
 | [**getVideo**](InferenceApi.md#getvideo) | **GET** /videos/{id} | Get a video generation job |
 | [**getVideoContent**](InferenceApi.md#getvideocontent) | **GET** /videos/{id}/content | Download a completed video artifact |
 | [**listModels**](InferenceApi.md#listmodels) | **GET** /models | List available models (OpenAI-compatible) |
 | [**listVideos**](InferenceApi.md#listvideos) | **GET** /videos | List video generation jobs |
+| [**updateDataRetention**](InferenceApi.md#updatedataretentionoperation) | **PUT** /organization/data-retention | Turn zero data retention on or off for the org |
 
 
 
@@ -85,7 +87,7 @@ example().catch(console.error);
 | **401** | Missing or invalid API key (OpenAI error envelope). |  -  |
 | **403** | API key lacks the required scope (OpenAI error envelope). |  -  |
 | **404** | Model or resource not found (OpenAI error envelope). |  -  |
-| **409** | Invalid request (OpenAI error envelope). |  -  |
+| **409** | Invalid request (OpenAI error envelope). On inference routes this includes &#x60;zero_data_retention_unavailable&#x60; when zero data retention is required and the model has no zero-data-retention host. |  -  |
 | **429** | Rate limit exceeded (OpenAI error envelope). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
@@ -93,7 +95,7 @@ example().catch(console.error);
 
 ## createChatCompletion
 
-> ChatCompletionResponse createChatCompletion(chatCompletionRequest)
+> ChatCompletionResponse createChatCompletion(chatCompletionRequest, xGPUAIZeroDataRetention)
 
 Create a chat completion (OpenAI-compatible)
 
@@ -117,6 +119,8 @@ async function example() {
   const body = {
     // ChatCompletionRequest
     chatCompletionRequest: ...,
+    // 'true' | 'false' | Send `true` to require zero data retention for this request even when the org setting is off. It can only tighten routing: `false` never relaxes an org with zero data retention on. Responses routed under zero data retention echo this header with `true`. A model without a zero-data-retention host returns 400 `zero_data_retention_unavailable`; a value other than true/false returns 400 `invalid_header`. (optional)
+    xGPUAIZeroDataRetention: xGPUAIZeroDataRetention_example,
   } satisfies CreateChatCompletionRequest;
 
   try {
@@ -137,6 +141,7 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **chatCompletionRequest** | [ChatCompletionRequest](ChatCompletionRequest.md) |  | |
+| **xGPUAIZeroDataRetention** | `true`, `false` | Send &#x60;true&#x60; to require zero data retention for this request even when the org setting is off. It can only tighten routing: &#x60;false&#x60; never relaxes an org with zero data retention on. Responses routed under zero data retention echo this header with &#x60;true&#x60;. A model without a zero-data-retention host returns 400 &#x60;zero_data_retention_unavailable&#x60;; a value other than true/false returns 400 &#x60;invalid_header&#x60;. | [Optional] [Defaults to `undefined`] [Enum: true, false] |
 
 ### Return type
 
@@ -156,7 +161,7 @@ example().catch(console.error);
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful response. application/json for non-streaming requests; text/event-stream for streaming requests (stream&#x3D;true).  |  -  |
-| **400** | Invalid request (OpenAI error envelope). |  -  |
+| **400** | Invalid request (OpenAI error envelope). On inference routes this includes &#x60;zero_data_retention_unavailable&#x60; when zero data retention is required and the model has no zero-data-retention host. |  -  |
 | **401** | Missing or invalid API key (OpenAI error envelope). |  -  |
 | **402** | Insufficient balance (OpenAI error envelope, SERV-06). |  -  |
 | **403** | API key lacks the required scope (OpenAI error envelope). |  -  |
@@ -164,14 +169,14 @@ example().catch(console.error);
 | **422** | Request validation failed (OpenAI error envelope). |  -  |
 | **429** | Rate limit exceeded (OpenAI error envelope). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **500** | Internal server error (OpenAI error envelope). |  -  |
-| **503** | Upstream provider unavailable (OpenAI error envelope). Retry-After header may indicate seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **503** | Upstream provider unavailable (OpenAI error envelope). Retry-After header may indicate seconds to wait. Code &#x60;data_retention_check_failed&#x60; means the org zero data retention setting could not be read, so the request was not sent; retry shortly. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
 ## createEmbeddings
 
-> EmbeddingsResponse createEmbeddings(embeddingsRequest)
+> EmbeddingsResponse createEmbeddings(embeddingsRequest, xGPUAIZeroDataRetention)
 
 Create embeddings (OpenAI-compatible)
 
@@ -197,6 +202,8 @@ async function example() {
   const body = {
     // EmbeddingsRequest
     embeddingsRequest: ...,
+    // 'true' | 'false' | Send `true` to require zero data retention for this request even when the org setting is off. It can only tighten routing: `false` never relaxes an org with zero data retention on. Responses routed under zero data retention echo this header with `true`. A model without a zero-data-retention host returns 400 `zero_data_retention_unavailable`; a value other than true/false returns 400 `invalid_header`. (optional)
+    xGPUAIZeroDataRetention: xGPUAIZeroDataRetention_example,
   } satisfies CreateEmbeddingsRequest;
 
   try {
@@ -217,6 +224,7 @@ example().catch(console.error);
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **embeddingsRequest** | [EmbeddingsRequest](EmbeddingsRequest.md) |  | |
+| **xGPUAIZeroDataRetention** | `true`, `false` | Send &#x60;true&#x60; to require zero data retention for this request even when the org setting is off. It can only tighten routing: &#x60;false&#x60; never relaxes an org with zero data retention on. Responses routed under zero data retention echo this header with &#x60;true&#x60;. A model without a zero-data-retention host returns 400 &#x60;zero_data_retention_unavailable&#x60;; a value other than true/false returns 400 &#x60;invalid_header&#x60;. | [Optional] [Defaults to `undefined`] [Enum: true, false] |
 
 ### Return type
 
@@ -236,7 +244,7 @@ example().catch(console.error);
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | One embedding vector per input, in request order. |  -  |
-| **400** | Invalid request (OpenAI error envelope). |  -  |
+| **400** | Invalid request (OpenAI error envelope). On inference routes this includes &#x60;zero_data_retention_unavailable&#x60; when zero data retention is required and the model has no zero-data-retention host. |  -  |
 | **401** | Missing or invalid API key (OpenAI error envelope). |  -  |
 | **402** | Insufficient balance (OpenAI error envelope, SERV-06). |  -  |
 | **403** | API key lacks the required scope (OpenAI error envelope). |  -  |
@@ -245,7 +253,7 @@ example().catch(console.error);
 | **429** | Rate limit exceeded (OpenAI error envelope). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **500** | Internal server error (OpenAI error envelope). |  -  |
 | **502** | The upstream answered but its response could not be used (OpenAI error envelope): code upstream_response_too_large when the vector payload exceeded the per-request size limit, or upstream_error for a malformed / misaligned response. Not retryable as-is for upstream_response_too_large — send fewer inputs. |  -  |
-| **503** | Upstream provider unavailable (OpenAI error envelope). Retry-After header may indicate seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **503** | Upstream provider unavailable (OpenAI error envelope). Retry-After header may indicate seconds to wait. Code &#x60;data_retention_check_failed&#x60; means the org zero data retention setting could not be read, so the request was not sent; retry shortly. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **504** | Upstream provider exceeded the synchronous per-attempt deadline (OpenAI error envelope). 504 semantic — distinct from 503 OpenAIUpstreamUnavailable which signals a connection or routing failure rather than a timeout.  |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
@@ -253,7 +261,7 @@ example().catch(console.error);
 
 ## createImage
 
-> ImagesResponse createImage(imagesGenerationsRequest, idempotencyKey)
+> ImagesResponse createImage(imagesGenerationsRequest, idempotencyKey, xGPUAIZeroDataRetention)
 
 Create image (OpenAI-compatible)
 
@@ -281,6 +289,8 @@ async function example() {
     imagesGenerationsRequest: ...,
     // string (optional)
     idempotencyKey: idempotencyKey_example,
+    // 'true' | 'false' | Send `true` to require zero data retention for this request even when the org setting is off. It can only tighten routing: `false` never relaxes an org with zero data retention on. Responses routed under zero data retention echo this header with `true`. A model without a zero-data-retention host returns 400 `zero_data_retention_unavailable`; a value other than true/false returns 400 `invalid_header`. (optional)
+    xGPUAIZeroDataRetention: xGPUAIZeroDataRetention_example,
   } satisfies CreateImageRequest;
 
   try {
@@ -302,6 +312,7 @@ example().catch(console.error);
 |------------- | ------------- | ------------- | -------------|
 | **imagesGenerationsRequest** | [ImagesGenerationsRequest](ImagesGenerationsRequest.md) |  | |
 | **idempotencyKey** | `string` |  | [Optional] [Defaults to `undefined`] |
+| **xGPUAIZeroDataRetention** | `true`, `false` | Send &#x60;true&#x60; to require zero data retention for this request even when the org setting is off. It can only tighten routing: &#x60;false&#x60; never relaxes an org with zero data retention on. Responses routed under zero data retention echo this header with &#x60;true&#x60;. A model without a zero-data-retention host returns 400 &#x60;zero_data_retention_unavailable&#x60;; a value other than true/false returns 400 &#x60;invalid_header&#x60;. | [Optional] [Defaults to `undefined`] [Enum: true, false] |
 
 ### Return type
 
@@ -321,7 +332,7 @@ example().catch(console.error);
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | OpenAI-shaped image generation response (b64_json only). |  -  |
-| **400** | Invalid request (OpenAI error envelope). |  -  |
+| **400** | Invalid request (OpenAI error envelope). On inference routes this includes &#x60;zero_data_retention_unavailable&#x60; when zero data retention is required and the model has no zero-data-retention host. |  -  |
 | **401** | Missing or invalid API key (OpenAI error envelope). |  -  |
 | **402** | Insufficient balance (OpenAI error envelope, SERV-06). |  -  |
 | **403** | API key lacks the required scope (OpenAI error envelope). |  -  |
@@ -329,7 +340,7 @@ example().catch(console.error);
 | **422** | Request validation failed (OpenAI error envelope). |  -  |
 | **429** | Rate limit exceeded (OpenAI error envelope). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **500** | Internal server error (OpenAI error envelope). |  -  |
-| **503** | Upstream provider unavailable (OpenAI error envelope). Retry-After header may indicate seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **503** | Upstream provider unavailable (OpenAI error envelope). Retry-After header may indicate seconds to wait. Code &#x60;data_retention_check_failed&#x60; means the org zero data retention setting could not be read, so the request was not sent; retry shortly. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **504** | Upstream provider exceeded the synchronous per-attempt deadline (OpenAI error envelope). 504 semantic — distinct from 503 OpenAIUpstreamUnavailable which signals a connection or routing failure rather than a timeout.  |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
@@ -405,13 +416,78 @@ example().catch(console.error);
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | A video generation job object. |  -  |
-| **400** | Invalid request (OpenAI error envelope). |  -  |
+| **400** | Invalid request (OpenAI error envelope). On inference routes this includes &#x60;zero_data_retention_unavailable&#x60; when zero data retention is required and the model has no zero-data-retention host. |  -  |
 | **401** | Missing or invalid API key (OpenAI error envelope). |  -  |
 | **402** | Insufficient balance (OpenAI error envelope, SERV-06). |  -  |
 | **403** | API key lacks the required scope (OpenAI error envelope). |  -  |
 | **404** | Model or resource not found (OpenAI error envelope). |  -  |
 | **429** | Rate limit exceeded (OpenAI error envelope). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **500** | Internal server error (OpenAI error envelope). |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## getDataRetention
+
+> DataRetention getDataRetention()
+
+Get the org zero data retention setting
+
+Returns whether zero data retention (ZDR) is on for the organization. When it is on, chat, embeddings and image requests route only to model hosts that keep no prompt or output content, a model without one returns 400 &#x60;zero_data_retention_unavailable&#x60;, and video generation is refused. Requires the &#x60;serverless:read&#x60; scope. The organization is taken from the authenticated API key. 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  InferenceApi,
+} from '@gpuai/sdk';
+import type { GetDataRetentionRequest } from '@gpuai/sdk';
+
+async function example() {
+  console.log("🚀 Testing @gpuai/sdk SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new InferenceApi(config);
+
+  try {
+    const data = await api.getDataRetention();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**DataRetention**](DataRetention.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`, `application/problem+json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **0** | Error response (RFC 7807) |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
@@ -703,7 +779,7 @@ example().catch(console.error);
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | OpenAI-shaped model list. |  -  |
-| **400** | Invalid request (OpenAI error envelope). |  -  |
+| **400** | Invalid request (OpenAI error envelope). On inference routes this includes &#x60;zero_data_retention_unavailable&#x60; when zero data retention is required and the model has no zero-data-retention host. |  -  |
 | **401** | Missing or invalid API key (OpenAI error envelope). |  -  |
 | **403** | API key lacks the required scope (OpenAI error envelope). |  -  |
 | **429** | Rate limit exceeded (OpenAI error envelope). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
@@ -782,6 +858,81 @@ example().catch(console.error);
 | **401** | Missing or invalid API key (OpenAI error envelope). |  -  |
 | **403** | API key lacks the required scope (OpenAI error envelope). |  -  |
 | **429** | Rate limit exceeded (OpenAI error envelope). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## updateDataRetention
+
+> DataRetention updateDataRetention(updateDataRetentionRequest)
+
+Turn zero data retention on or off for the org
+
+Sets the organization\&#39;s zero data retention (ZDR) setting. Takes effect from the next inference request. Requires the &#x60;serverless:write&#x60; scope AND org-admin privileges (a non-admin member gets 403). &#x60;zero_data_retention&#x60; is required (422 when missing). 
+
+### Example
+
+```ts
+import {
+  Configuration,
+  InferenceApi,
+} from '@gpuai/sdk';
+import type { UpdateDataRetentionOperationRequest } from '@gpuai/sdk';
+
+async function example() {
+  console.log("🚀 Testing @gpuai/sdk SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new InferenceApi(config);
+
+  const body = {
+    // UpdateDataRetentionRequest
+    updateDataRetentionRequest: ...,
+  } satisfies UpdateDataRetentionOperationRequest;
+
+  try {
+    const data = await api.updateDataRetention(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **updateDataRetentionRequest** | [UpdateDataRetentionRequest](UpdateDataRetentionRequest.md) |  | |
+
+### Return type
+
+[**DataRetention**](DataRetention.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **403** | Error response (RFC 7807) |  -  |
+| **422** | Error response (RFC 7807) |  -  |
+| **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
+| **0** | Error response (RFC 7807) |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

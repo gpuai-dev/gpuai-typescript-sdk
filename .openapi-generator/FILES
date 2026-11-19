@@ -41,6 +41,7 @@ docs/CreateRegistryCredentialRequest.md
 docs/CreateSshKeyRequest.md
 docs/CreateWebhookEndpointRequest.md
 docs/CryptoDeposit.md
+docs/DataRetention.md
 docs/DedicatedIPRequest.md
 docs/Embedding.md
 docs/EmbeddingsRequest.md
@@ -129,6 +130,7 @@ docs/TemplateList.md
 docs/TemplatePortsInner.md
 docs/TemplatesApi.md
 docs/UpdateBillingDetailsRequest.md
+docs/UpdateDataRetentionRequest.md
 docs/UpdateInstanceRequest.md
 docs/UpdateSpendingLimitRequest.md
 docs/Usage.md
@@ -206,6 +208,7 @@ src/models/CreateRegistryCredentialRequest.ts
 src/models/CreateSshKeyRequest.ts
 src/models/CreateWebhookEndpointRequest.ts
 src/models/CryptoDeposit.ts
+src/models/DataRetention.ts
 src/models/DedicatedIPRequest.ts
 src/models/Embedding.ts
 src/models/EmbeddingsRequest.ts
@@ -281,6 +284,7 @@ src/models/TemplateEnvInner.ts
 src/models/TemplateList.ts
 src/models/TemplatePortsInner.ts
 src/models/UpdateBillingDetailsRequest.ts
+src/models/UpdateDataRetentionRequest.ts
 src/models/UpdateInstanceRequest.ts
 src/models/UpdateSpendingLimitRequest.ts
 src/models/Usage.ts

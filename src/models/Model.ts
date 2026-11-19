@@ -101,6 +101,12 @@ export interface Model {
      */
     supportsStructuredOutputs?: boolean;
     /**
+     * True when this model and tier can be served with zero data retention: at least one model host keeps no prompt or output content. Only these models are callable by an org with zero data retention on, or with the X-GPUAI-Zero-Data-Retention header. Always false for video.
+     * @type {boolean}
+     * @memberof Model
+     */
+    zeroDataRetention?: boolean;
+    /**
      * Typed parameter descriptors for media (image/video) models — name, type, enum/bounds/default. Playgrounds render input forms from these.
      * @type {Array<ModelParametersInner>}
      * @memberof Model
@@ -205,6 +211,7 @@ export function ModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Mod
         'supportedParameters': json['supported_parameters'] == null ? undefined : json['supported_parameters'],
         'supportsTools': json['supports_tools'] == null ? undefined : json['supports_tools'],
         'supportsStructuredOutputs': json['supports_structured_outputs'] == null ? undefined : json['supports_structured_outputs'],
+        'zeroDataRetention': json['zero_data_retention'] == null ? undefined : json['zero_data_retention'],
         'parameters': json['parameters'] == null ? undefined : ((json['parameters'] as Array<any>).map(ModelParametersInnerFromJSON)),
         'pricing': ModelPricingFromJSON(json['pricing']),
         'aliases': json['aliases'] == null ? undefined : json['aliases'],
@@ -236,6 +243,7 @@ export function ModelToJSONTyped(value?: Model | null, ignoreDiscriminator: bool
         'supported_parameters': value['supportedParameters'],
         'supports_tools': value['supportsTools'],
         'supports_structured_outputs': value['supportsStructuredOutputs'],
+        'zero_data_retention': value['zeroDataRetention'],
         'parameters': value['parameters'] == null ? undefined : ((value['parameters'] as Array<any>).map(ModelParametersInnerToJSON)),
         'pricing': ModelPricingToJSON(value['pricing']),
         'aliases': value['aliases'],
