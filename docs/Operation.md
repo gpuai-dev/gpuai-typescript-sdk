@@ -16,6 +16,7 @@ Name | Type
 `updatedAt` | Date
 `completedAt` | Date
 `warnings` | Array&lt;string&gt;
+`hint` | string
 
 ## Example
 
@@ -34,6 +35,7 @@ const example = {
   "updatedAt": null,
   "completedAt": null,
   "warnings": null,
+  "hint": null,
 } satisfies Operation
 
 console.log(example)

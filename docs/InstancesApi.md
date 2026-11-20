@@ -83,7 +83,7 @@ example().catch(console.error);
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **202** | Accepted; long-running operation |  * Operation-Id - Use GET /operations/{id} to poll <br>  * GPUAI-Hint - Advisory only, and absent on most launches. Sent when the request is a one-off batch run (a custom image with a command and auto_terminate_hours) to point at Jobs (POST /jobs), which start a machine for the work and shut it down a few minutes after it ends. It never changes the launch. <br>  * GPUAI-Balance-Warning -  <br>  |
+| **202** | Accepted; long-running operation |  * Operation-Id - Use GET /operations/{id} to poll <br>  * GPUAI-Hint - Advisory only, and absent on most launches. Sent to point at Jobs (POST /jobs), which start a machine for the work and shut it down a few minutes after it ends, when the request is a one-off batch run (a custom image with a command and auto_terminate_hours) or the organization launched many instances in the last 24 hours that each ran for less than 15 minutes. The same text is in the response body\&#39;s hint field. It never changes the launch. <br>  * GPUAI-Balance-Warning -  <br>  |
 | **429** | Rate limit exceeded (RFC 7807). Retry-After header indicates seconds to wait. |  * Retry-After - Seconds the client should wait before retrying. <br>  |
 | **0** | Error response (RFC 7807) |  -  |
 

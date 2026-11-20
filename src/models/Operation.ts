@@ -94,6 +94,12 @@ export interface Operation {
      * @memberof Operation
      */
     warnings?: Array<string>;
+    /**
+     * Advisory pointer to Jobs (POST /jobs), present only on the synchronous 202 from POST /instances and only on some launches: when the request is a one-off batch run, or the organization launched many instances in the last 24 hours that each ran for less than 15 minutes. Same text as the GPUAI-Hint header. Never on GET /operations/{id} polls, and it never changes the launch.
+     * @type {string}
+     * @memberof Operation
+     */
+    hint?: string;
 }
 
 
@@ -150,6 +156,7 @@ export function OperationFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
         'completedAt': json['completed_at'] == null ? undefined : (new Date(json['completed_at'])),
         'warnings': json['warnings'] == null ? undefined : json['warnings'],
+        'hint': json['hint'] == null ? undefined : json['hint'],
     };
 }
 
@@ -174,6 +181,7 @@ export function OperationToJSONTyped(value?: Operation | null, ignoreDiscriminat
         'updated_at': value['updatedAt'] == null ? value['updatedAt'] : value['updatedAt'].toISOString(),
         'completed_at': value['completedAt'] == null ? value['completedAt'] : value['completedAt'].toISOString(),
         'warnings': value['warnings'],
+        'hint': value['hint'],
     };
 }
 
