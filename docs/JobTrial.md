@@ -13,6 +13,9 @@ Name | Type
 `creditedCents` | number
 `remainingCents` | number
 `message` | string
+`funding` | string
+`maxPricePerHour` | number
+`maxRuntimeSeconds` | number
 
 ## Example
 
@@ -28,6 +31,9 @@ const example = {
   "creditedCents": null,
   "remainingCents": null,
   "message": null,
+  "funding": null,
+  "maxPricePerHour": null,
+  "maxRuntimeSeconds": null,
 } satisfies JobTrial
 
 console.log(example)

@@ -61,6 +61,25 @@ export interface JobTrial {
      * @memberof JobTrial
      */
     message?: string;
+    /**
+     * How an eligible organization's trial is paid for. `credit_back`: it pays as usual and job cost is credited back. `no_deposit`: it has no balance and may submit a trial job now. `deposit_first`: it has no balance and must add credits first. Omitted when not eligible.
+     * 
+     * @type {JobTrialFundingEnum}
+     * @memberof JobTrial
+     */
+    funding?: JobTrialFundingEnum;
+    /**
+     * The most a trial job's GPU may cost per hour. Only with `funding` no_deposit, and only when the deployment sets such a limit (by default it sets none).
+     * @type {number}
+     * @memberof JobTrial
+     */
+    maxPricePerHour?: number;
+    /**
+     * The longest a trial job may run. Only with `funding` no_deposit, and only when the deployment sets such a limit (by default it sets none).
+     * @type {number}
+     * @memberof JobTrial
+     */
+    maxRuntimeSeconds?: number;
 }
 
 
@@ -75,6 +94,16 @@ export const JobTrialReasonEnum = {
     LinkedAccount: 'linked_account'
 } as const;
 export type JobTrialReasonEnum = typeof JobTrialReasonEnum[keyof typeof JobTrialReasonEnum];
+
+/**
+ * @export
+ */
+export const JobTrialFundingEnum = {
+    CreditBack: 'credit_back',
+    NoDeposit: 'no_deposit',
+    DepositFirst: 'deposit_first'
+} as const;
+export type JobTrialFundingEnum = typeof JobTrialFundingEnum[keyof typeof JobTrialFundingEnum];
 
 
 /**
@@ -106,6 +135,9 @@ export function JobTrialFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'creditedCents': json['credited_cents'],
         'remainingCents': json['remaining_cents'],
         'message': json['message'] == null ? undefined : json['message'],
+        'funding': json['funding'] == null ? undefined : json['funding'],
+        'maxPricePerHour': json['max_price_per_hour'] == null ? undefined : json['max_price_per_hour'],
+        'maxRuntimeSeconds': json['max_runtime_seconds'] == null ? undefined : json['max_runtime_seconds'],
     };
 }
 
@@ -127,6 +159,9 @@ export function JobTrialToJSONTyped(value?: JobTrial | null, ignoreDiscriminator
         'credited_cents': value['creditedCents'],
         'remaining_cents': value['remainingCents'],
         'message': value['message'],
+        'funding': value['funding'],
+        'max_price_per_hour': value['maxPricePerHour'],
+        'max_runtime_seconds': value['maxRuntimeSeconds'],
     };
 }
 

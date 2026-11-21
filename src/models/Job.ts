@@ -151,6 +151,13 @@ export interface Job {
      */
     maxPricePerHour: number | null;
     /**
+     * The job was submitted with no balance and runs on the free trial. It stops when the trial credit is used.
+     * 
+     * @type {boolean}
+     * @memberof Job
+     */
+    trialFunded?: boolean;
+    /**
      * `queued` is waiting for a GPU, `assigned` has a GPU and is about to start, `running` is running. `succeeded`, `failed` and `cancelled` are final. A job that is retried goes back to `queued`.
      * 
      * @type {JobStatusEnum}
@@ -446,6 +453,7 @@ export function JobFromJSONTyped(json: any, ignoreDiscriminator: boolean): Job {
         'checkpointPath': json['checkpoint_path'],
         'maxRetries': json['max_retries'],
         'maxPricePerHour': json['max_price_per_hour'],
+        'trialFunded': json['trial_funded'] == null ? undefined : json['trial_funded'],
         'status': json['status'],
         'statusReason': json['status_reason'],
         'cancelRequested': json['cancel_requested'],
@@ -506,6 +514,7 @@ export function JobToJSONTyped(value?: Job | null, ignoreDiscriminator: boolean 
         'checkpoint_path': value['checkpointPath'],
         'max_retries': value['maxRetries'],
         'max_price_per_hour': value['maxPricePerHour'],
+        'trial_funded': value['trialFunded'],
         'status': value['status'],
         'status_reason': value['statusReason'],
         'cancel_requested': value['cancelRequested'],

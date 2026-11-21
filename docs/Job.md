@@ -26,6 +26,7 @@ Name | Type
 `checkpointPath` | string
 `maxRetries` | number
 `maxPricePerHour` | number
+`trialFunded` | boolean
 `status` | string
 `statusReason` | string
 `cancelRequested` | boolean
@@ -80,6 +81,7 @@ const example = {
   "checkpointPath": null,
   "maxRetries": null,
   "maxPricePerHour": null,
+  "trialFunded": null,
   "status": null,
   "statusReason": null,
   "cancelRequested": null,
