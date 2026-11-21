@@ -101,6 +101,7 @@ docs/InvoiceList.md
 docs/Job.md
 docs/JobAttempt.md
 docs/JobCreate.md
+docs/JobCreateRepo.md
 docs/JobGpuTypes.md
 docs/JobGpuTypesDataInner.md
 docs/JobLogChunk.md
@@ -292,6 +293,7 @@ src/models/InvoiceList.ts
 src/models/Job.ts
 src/models/JobAttempt.ts
 src/models/JobCreate.ts
+src/models/JobCreateRepo.ts
 src/models/JobGpuTypes.ts
 src/models/JobGpuTypesDataInner.ts
 src/models/JobLogChunk.ts

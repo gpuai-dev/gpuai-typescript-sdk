@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { JobCreateRepo } from './JobCreateRepo';
+import {
+    JobCreateRepoFromJSON,
+    JobCreateRepoFromJSONTyped,
+    JobCreateRepoToJSON,
+    JobCreateRepoToJSONTyped,
+} from './JobCreateRepo';
+
 /**
  * 
  * @export
@@ -27,19 +35,32 @@ export interface JobCreate {
      */
     name?: string;
     /**
-     * The container image to run, such as `registry.example.com/team/train:1.2`. The machine must be able to pull it without credentials.
+     * The container image to run, such as `registry.example.com/team/train:1.2`. The machine must be able to pull it without credentials. Required unless the deployment runs a default image: then it may be left out, `gpu_type` is required, and the job runs on the GPU.ai PyTorch image built for that GPU.
      * 
      * @type {string}
      * @memberof JobCreate
      */
-    image: string;
+    image?: string;
     /**
-     * The program and its arguments. The first item replaces the image's entrypoint and the rest are its arguments, so `["python", "train.py", "--epochs", "3"]` runs exactly that.
+     * The program and its arguments. The first item replaces the image's entrypoint and the rest are its arguments, so `["python", "train.py", "--epochs", "3"]` runs exactly that. Send this or `script`.
      * 
      * @type {Array<string>}
      * @memberof JobCreate
      */
-    command: Array<string>;
+    command?: Array<string>;
+    /**
+     * A shell script run with `bash -c` in place of `command`, such as `pip install -r requirements.txt && python train.py`. Only where the deployment runs a default image; elsewhere it is refused with a 422.
+     * 
+     * @type {string}
+     * @memberof JobCreate
+     */
+    script?: string;
+    /**
+     * 
+     * @type {JobCreateRepo}
+     * @memberof JobCreate
+     */
+    repo?: JobCreateRepo;
     /**
      * Environment variables for the job, at most 100. Names starting with `GPUAI_` are reserved. Values are stored to run the job and are never returned by the API.
      * 
@@ -153,8 +174,6 @@ export type JobCreateIsolationEnum = typeof JobCreateIsolationEnum[keyof typeof 
  * Check if a given object implements the JobCreate interface.
  */
 export function instanceOfJobCreate(value: object): value is JobCreate {
-    if (!('image' in value) || value['image'] === undefined) return false;
-    if (!('command' in value) || value['command'] === undefined) return false;
     return true;
 }
 
@@ -169,8 +188,10 @@ export function JobCreateFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     return {
         
         'name': json['name'] == null ? undefined : json['name'],
-        'image': json['image'],
-        'command': json['command'],
+        'image': json['image'] == null ? undefined : json['image'],
+        'command': json['command'] == null ? undefined : json['command'],
+        'script': json['script'] == null ? undefined : json['script'],
+        'repo': json['repo'] == null ? undefined : JobCreateRepoFromJSON(json['repo']),
         'env': json['env'] == null ? undefined : json['env'],
         'gpuType': json['gpu_type'] == null ? undefined : json['gpu_type'],
         'minVramGb': json['min_vram_gb'] == null ? undefined : json['min_vram_gb'],
@@ -202,6 +223,8 @@ export function JobCreateToJSONTyped(value?: JobCreate | null, ignoreDiscriminat
         'name': value['name'],
         'image': value['image'],
         'command': value['command'],
+        'script': value['script'],
+        'repo': JobCreateRepoToJSON(value['repo']),
         'env': value['env'],
         'gpu_type': value['gpuType'],
         'min_vram_gb': value['minVramGb'],

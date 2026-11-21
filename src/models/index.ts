@@ -90,6 +90,7 @@ export * from './InvoiceList';
 export * from './Job';
 export * from './JobAttempt';
 export * from './JobCreate';
+export * from './JobCreateRepo';
 export * from './JobGpuTypes';
 export * from './JobGpuTypesDataInner';
 export * from './JobLogChunk';

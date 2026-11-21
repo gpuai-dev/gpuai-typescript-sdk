@@ -9,6 +9,8 @@ Name | Type
 `name` | string
 `image` | string
 `command` | Array&lt;string&gt;
+`script` | string
+`repo` | [JobCreateRepo](JobCreateRepo.md)
 `env` | { [key: string]: string; }
 `gpuType` | string
 `minVramGb` | number
@@ -34,6 +36,8 @@ const example = {
   "name": null,
   "image": null,
   "command": null,
+  "script": null,
+  "repo": null,
   "env": null,
   "gpuType": null,
   "minVramGb": null,
